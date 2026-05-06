@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="80" height="80">
+  <!-- Red circle background -->
+  <circle cx="50" cy="50" r="45" fill="#e74c3c"/>
+  <!-- X mark -->
+  <path d="M35 35 L65 65" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+  <path d="M65 35 L35 65" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+</svg>

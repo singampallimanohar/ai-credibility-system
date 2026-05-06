@@ -1,0 +1,27 @@
+Watching for file changes with StatReloader
+[04/May/2026 12:45:25] "GET / HTTP/1.1" 302 0
+[04/May/2026 12:45:25] "GET /login/ HTTP/1.1" 200 8434
+[04/May/2026 12:45:29,776] - Broken pipe from ('127.0.0.1', 2332)
+[04/May/2026 12:45:36] "GET / HTTP/1.1" 302 0
+[04/May/2026 12:45:38] "GET /login/ HTTP/1.1" 200 8434
+[04/May/2026 12:47:23] "GET / HTTP/1.1" 302 0
+[04/May/2026 12:47:24] "GET /login/ HTTP/1.1" 200 8434
+Not Found: /favicon.ico
+[04/May/2026 12:47:24] "GET /favicon.ico HTTP/1.1" 404 4230
+[04/May/2026 12:47:38] "GET /register/ HTTP/1.1" 200 11171
+[04/May/2026 12:49:16] "POST /register/ HTTP/1.1" 200 12436
+[04/May/2026 12:49:20] "GET /login/ HTTP/1.1" 200 8434
+[04/May/2026 12:49:47] "POST /login/ HTTP/1.1" 200 8725
+[04/May/2026 12:49:54] "GET /register/ HTTP/1.1" 200 11171
+[04/May/2026 12:50:54] "POST /register/ HTTP/1.1" 302 0
+[04/May/2026 12:50:55] "GET /dashboard/ HTTP/1.1" 200 11983
+[04/May/2026 13:01:20] "POST /analysis/analyze/ HTTP/1.1" 200 15949
+[04/May/2026 13:01:28] "GET /dashboard/ HTTP/1.1" 200 13872
+[04/May/2026 13:01:35] "POST /analysis/analyze/ HTTP/1.1" 200 15949
+[04/May/2026 13:02:50] "GET /analysis/my-analyses/ HTTP/1.1" 200 14425
+[04/May/2026 13:03:00] "GET /dashboard/ HTTP/1.1" 200 15017
+[04/May/2026 13:03:02] "GET /analysis/analyze/ HTTP/1.1" 302 0
+[04/May/2026 13:03:02] "GET /dashboard/ HTTP/1.1" 200 15017
+[04/May/2026 13:03:04] "GET /analysis/analyze/ HTTP/1.1" 302 0
+[04/May/2026 13:03:04] "GET /dashboard/ HTTP/1.1" 200 15017
+[04/May/2026 13:03:05] "GET /analysis/my-analyses/ HTTP/1.1" 200 14425

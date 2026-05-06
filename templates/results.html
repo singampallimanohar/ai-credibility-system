@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+
+{% block title %}Analysis Results - Credibility Analysis System{% endblock %}
+
+{% block content %}
+<div class="container results-container">
+    <!-- Back Button -->
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary mb-4">
+        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+    </a>
+    
+    <!-- Results Header -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="fas fa-chart-line me-2"></i>Analysis Results
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center">
+                    <div class="score-badge 
+                        {% if result.score >= 0.7 %}score-high{% elif result.score >= 0.4 %}score-medium{% else %}score-low{% endif %}">
+                        {{ result.score|floatformat:2 }}
+                    </div>
+                    <h5 class="mt-3">{{ result.label }}</h5>
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-check-circle me-2 text-success"></i>Credible</span>
+                            <span class="badge bg-{% if result.is_credible %}success{% else %}danger{% endif %} rounded-pill">
+                                {% if result.is_credible %}Yes{% else %}No{% endif %}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-percentage me-2 text-info"></i>Confidence</span>
+                            <span class="badge bg-primary rounded-pill">{{ result.confidence|title }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Text Content -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-file-alt me-2"></i>Analyzed Content
+            </h5>
+        </div>
+        <div class="card-body">
+            <p class="mb-0" style="white-space: pre-wrap;">{{ request.text_content }}</p>
+            
+            {% if request.source_url %}
+            <hr>
+            <p class="mb-0">
+                <strong>Source:</strong> 
+                <a href="{{ request.source_url }}" target="_blank">{{ request.source_url }}</a>
+            </p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Statistics -->
+    {% if stats %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-chart-bar me-2"></i>Content Statistics
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 text-center">
+                    <div class="stat-value">{{ stats.word_count }}</div>
+                    <div class="stat-label">Words</div>
+                </div>
+                <div class="col-md-3 text-center">
+                    <div class="stat-value">{{ stats.sentence_count }}</div>
+                    <div class="stat-label">Sentences</div>
+                </div>
+                <div class="col-md-3 text-center">
+                    <div class="stat-value">{{ stats.character_count }}</div>
+                    <div class="stat-label">Characters</div>
+                </div>
+                <div class="col-md-3 text-center">
+                    <div class="stat-value">{{ stats.avg_word_length|floatformat:1 }}</div>
+                    <div class="stat-label">Avg Word Length</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Analysis Factors -->
+    {% if result.factors %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-list-ol me-2"></i>Analysis Factors
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Factor</th>
+                            <th>Score</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Length Score</td>
+                            <td>{{ result.factors.length_score|floatformat:2 }}</td>
+                            <td>
+                                {% if result.factors.length_score >= 0.7 %}
+                                <span class="badge bg-success">Good</span>
+                                {% elif result.factors.length_score >= 0.4 %}
+                                <span class="badge bg-warning">Fair</span>
+                                {% else %}
+                                <span class="badge bg-danger">Poor</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Indicator Score</td>
+                            <td>{{ result.factors.indicator_score|floatformat:2 }}</td>
+                            <td>
+                                {% if result.factors.indicator_score >= 0.7 %}
+                                <span class="badge bg-success">Credible Indicators</span>
+                                {% elif result.factors.indicator_score >= 0.4 %}
+                                <span class="badge bg-warning">Mixed</span>
+                                {% else %}
+                                <span class="badge bg-danger">Suspicious Indicators</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Structure Score</td>
+                            <td>{{ result.factors.structure_score|floatformat:2 }}</td>
+                            <td>
+                                {% if result.factors.structure_score >= 0.7 %}
+                                <span class="badge bg-success">Well Structured</span>
+                                {% elif result.factors.structure_score >= 0.4 %}
+                                <span class="badge bg-warning">Fair</span>
+                                {% else %}
+                                <span class="badge bg-danger">Poor Structure</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>URL Presence</td>
+                            <td>{% if result.factors.url_presence %}Yes{% else %}No{% endif %}</td>
+                            <td>
+                                {% if result.factors.url_presence %}
+                                <span class="badge bg-info">Source Included</span>
+                                {% else %}
+                                <span class="badge bg-secondary">No Source</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Recommendations -->
+    {% if result.recommendations %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-lightbulb me-2"></i>Recommendations
+            </h5>
+        </div>
+        <div class="card-body">
+            <p class="mb-0">{{ result.recommendations }}</p>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Feedback Section -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-comment-dots me-2"></i>Rate This Analysis
+            </h5>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{% url 'analysis:submit_feedback' result_id=request.result.id %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">How accurate was this analysis?</label>
+                    <div class="d-flex gap-3">
+                        {% for value, label in feedback_choices %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="rating" 
+                                   id="rating{{ value }}" value="{{ value }}" required>
+                            <label class="form-check-label" for="rating{{ value }}">
+                                {{ label }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="comment" class="form-label">Additional Comments (Optional)</label>
+                    <textarea class="form-control" id="comment" name="comment" 
+                              rows="3" placeholder="Share your thoughts..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane me-2"></i>Submit Feedback
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" width="200" height="150">
+  <!-- Background -->
+  <rect width="200" height="150" fill="#ecf0f1" rx="10"/>
+  
+  <!-- Document/Analysis icon -->
+  <rect x="60" y="30" width="80" height="90" fill="#fff" rx="5" stroke="#bdc3c7" stroke-width="2"/>
+  
+  <!-- Document lines -->
+  <line x1="75" y1="50" x2="125" y2="50" stroke="#bdc3c7" stroke-width="2"/>
+  <line x1="75" y1="65" x2="125" y2="65" stroke="#bdc3c7" stroke-width="2"/>
+  <line x1="75" y1="80" x2="110" y2="80" stroke="#bdc3c7" stroke-width="2"/>
+  
+  <!-- Magnifying glass -->
+  <circle cx="130" cy="100" r="25" fill="none" stroke="#3498db" stroke-width="4"/>
+  <line x1="148" y1="118" x2="165" y2="135" stroke="#3498db" stroke-width="4" stroke-linecap="round"/>
+  
+  <!-- Question mark -->
+  <text x="100" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#95a5a6">?</text>
+</svg>
