@@ -3,121 +3,139 @@
 {% block title %}Register - Credibility Analysis System{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="auth-container">
-        <div class="card">
-            <div class="card-body p-5">
-                <div class="text-center mb-4">
-                    <i class="fas fa-shield-alt fa-3x text-primary"></i>
-                    <h2 class="mt-3">Create Account</h2>
-                    <p class="text-muted">Join the Credibility Analysis System</p>
+<div class="container split-auth-container">
+    <div class="glass-card auth-split-card" style="max-width: 1150px;">
+        <div class="card-glowing-border"></div>
+
+        <!-- Left Side Premium Visual Column -->
+        <div class="auth-split-visual">
+            <div class="visual-mesh-grid"></div>
+            <div class="visual-glowing-sphere" style="background: radial-gradient(circle, rgba(var(--accent-cyan-rgb), 0.35) 0%, rgba(var(--accent-primary-rgb), 0.1) 60%, transparent 100%);"></div>
+            
+            <div class="z-3">
+                <span class="ai-status-pill mb-3">
+                    <span class="pulse-dot"></span>
+                    Neural Onboarding
+                </span>
+                <h1 class="text-gradient font-heading mt-2">JOIN CREDIBILITY.AI</h1>
+                <p class="fs-6 text-secondary mt-1">Unlock industrial-grade objectivity analyzers and timeline analytics by deploying your custom developer profile.</p>
+            </div>
+            
+            <div class="z-3 pt-5">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="p-2 bg-dark bg-opacity-50 border border-secondary border-opacity-25 rounded-circle" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-bolt text-cyan"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold text-white fs-7">Real-time Performance</div>
+                        <div class="fs-8 text-secondary">Processes up to 5,000 characters in less than 2 seconds.</div>
+                    </div>
                 </div>
-                
-                <form method="post" action="{% url 'register' %}">
-                    {% csrf_token %}
-                    
-                    {% if form.errors %}
-                    <div class="alert alert-danger">
-                        <strong>Please correct the errors below:</strong>
-                        <ul class="mb-0">
+            </div>
+        </div>
+
+        <!-- Right Side Glass Registration Column -->
+        <div class="auth-split-form" style="padding: 2.5rem 3.5rem;">
+            <div class="mb-4">
+                <h2 class="text-gradient">Create Account</h2>
+                <p class="text-secondary fs-7">Deploy your custom developer credentials below.</p>
+            </div>
+
+            <form method="post" action="{% url 'register' %}" class="needs-validation" novalidate>
+                {% csrf_token %}
+
+                {% if form.errors %}
+                <div class="alert alert-danger glass-card border-0 mb-4 text-white" style="background: rgba(239,68,68,0.18);">
+                    <ul class="mb-0 fs-7">
                         {% for field in form %}
                             {% for error in field.errors %}
                             <li>{{ field.label }}: {{ error }}</li>
                             {% endfor %}
                         {% endfor %}
                         {% for error in form.non_field_errors %}
-                            <li>{{ error }}</li>
+                        <li>{{ error }}</li>
                         {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
-                    
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="first_name" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" 
-                                   placeholder="Enter first name" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="last_name" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" 
-                                   placeholder="Enter last name" required>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fas fa-user"></i>
-                            </span>
-                            <input type="text" class="form-control" id="username" name="username" 
-                                   placeholder="Choose a username" required>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email Address</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fas fa-envelope"></i>
-                            </span>
-                            <input type="email" class="form-control" id="email" name="email" 
-                                   placeholder="Enter your email" required>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="password1" class="form-label">Password</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fas fa-lock"></i>
-                            </span>
-                            <input type="password" class="form-control" id="password1" name="password1" 
-                                   placeholder="Create a password" required>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="password2" class="form-label">Confirm Password</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fas fa-lock"></i>
-                            </span>
-                            <input type="password" class="form-control" id="password2" name="password2" 
-                                   placeholder="Confirm your password" required>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="phone" class="form-label">Phone (Optional)</label>
-                        <input type="tel" class="form-control" id="phone" name="phone" 
-                               placeholder="Enter phone number">
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="address" class="form-label">Address (Optional)</label>
-                        <textarea class="form-control" id="address" name="address" 
-                                  rows="2" placeholder="Enter your address"></textarea>
-                    </div>
-                    
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="terms" required>
-                        <label class="form-check-label" for="terms">
-                            I agree to the <a href="#">Terms and Conditions</a>
-                        </label>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary w-100 py-2">
-                        <i class="fas fa-user-plus me-2"></i> Create Account
-                    </button>
-                </form>
-                
-                <div class="text-center mt-4">
-                    <p>Already have an account? 
-                        <a href="{% url 'login' %}" class="text-decoration-none">Login here</a>
-                    </p>
+                    </ul>
                 </div>
+                {% endif %}
+
+                <!-- First and Last Name row -->
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <div class="form-group-futuristic mb-0">
+                            <input type="text" class="form-input-futuristic" id="first_name" name="first_name"
+                                placeholder="First Name" required style="padding-left: 1.5rem !important;">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group-futuristic mb-0">
+                            <input type="text" class="form-input-futuristic" id="last_name" name="last_name"
+                                placeholder="Last Name" required style="padding-left: 1.5rem !important;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Username Form Field -->
+                <div class="form-group-futuristic mb-3">
+                    <input type="text" class="form-input-futuristic" id="username" name="username"
+                        placeholder="Choose a username" required>
+                    <i class="fas fa-user-astronaut form-input-icon"></i>
+                </div>
+
+                <!-- Email Form Field -->
+                <div class="form-group-futuristic mb-3">
+                    <input type="email" class="form-input-futuristic" id="email" name="email"
+                        placeholder="Email Address" required>
+                    <i class="fas fa-envelope form-input-icon"></i>
+                </div>
+
+                <!-- Password Row -->
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <div class="form-group-futuristic mb-0">
+                            <input type="password" class="form-input-futuristic" id="password1" name="password1"
+                                placeholder="Password" required style="padding-left: 1.5rem !important;">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group-futuristic mb-0">
+                            <input type="password" class="form-input-futuristic" id="password2" name="password2"
+                                placeholder="Confirm Password" required style="padding-left: 1.5rem !important;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phone and Address row -->
+                <div class="form-group-futuristic mb-3">
+                    <input type="tel" class="form-input-futuristic" id="phone" name="phone"
+                        placeholder="Phone Number (Optional)">
+                    <i class="fas fa-phone form-input-icon"></i>
+                </div>
+
+                <div class="form-group-futuristic mb-3">
+                    <textarea class="form-input-futuristic" id="address" name="address" rows="2"
+                        placeholder="Mailing Address (Optional)" style="padding-left: 1.5rem !important; height: auto; min-height: 70px;"></textarea>
+                </div>
+
+                <!-- Terms checkbox -->
+                <div class="mb-4">
+                    <label class="checkbox-cyber-container">I agree to terms & cognitive directives
+                        <input type="checkbox" id="terms" required>
+                        <span class="checkmark-cyber"></span>
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-futuristic btn-cyber-primary w-100 py-3 mb-3">
+                    <i class="fas fa-user-plus"></i> Initialize Account Creation
+                </button>
+            </form>
+
+            <div class="text-center mt-3">
+                <p class="fs-8 text-secondary">
+                    Already a registered member? 
+                    <a href="{% url 'login' %}" class="text-gradient fw-semibold text-decoration-none ms-1">Login here</a>
+                </p>
             </div>
         </div>
     </div>

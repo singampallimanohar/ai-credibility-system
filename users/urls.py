@@ -8,4 +8,5 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile, name='profile'),
     path('history/', views.analysis_history, name='analysis_history'),
+    path('auth/social/<str:provider>/', views.social_login_sim, name='social_login_sim'),
 ]

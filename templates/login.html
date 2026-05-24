@@ -3,74 +3,500 @@
 {% block title %}Login - Credibility Analysis System{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="auth-container">
-        <div class="card">
-            <div class="card-body p-5">
-                <div class="text-center mb-4">
-                    <i class="fas fa-shield-alt fa-3x text-primary"></i>
-                    <h2 class="mt-3">Welcome Back</h2>
-                    <p class="text-muted">Sign in to access the Credibility Analysis System</p>
+<div class="container split-auth-container">
+    <div class="glass-card auth-split-card">
+        <div class="card-glowing-border"></div>
+
+        <!-- Left Side Premium Visual Column -->
+        <div class="auth-split-visual">
+            <div class="visual-mesh-grid"></div>
+            <div class="visual-glowing-sphere"></div>
+            
+            <div class="z-3">
+                <span class="ai-status-pill mb-3">
+                    <span class="pulse-dot"></span>
+                    Integrity System
+                </span>
+                <h1 class="text-gradient font-heading mt-2">CREDIBILITY.AI</h1>
+                <p class="fs-6 text-secondary mt-1">Harness advanced NLP neural architecture to instantly evaluate the integrity of news articles, social posts, and blog contents.</p>
+            </div>
+            
+            <div class="z-3 pt-5">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="p-2 bg-dark bg-opacity-50 border border-secondary border-opacity-25 rounded-circle">
+                        <i class="fas fa-lock-open text-cyan fs-5 px-1"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold text-white">Secure Sandbox Environment</div>
+                        <div class="fs-8 text-secondary">All requests are fully sandboxed and processed in real time.</div>
+                    </div>
                 </div>
-                
-                <form method="post" action="{% url 'login' %}">
-                    {% csrf_token %}
-                    
-                    {% if form.errors %}
-                    <div class="alert alert-danger">
-                        <strong>Please correct the errors below:</strong>
-                        <ul class="mb-0">
+            </div>
+        </div>
+
+        <!-- Right Side Glass Login Column -->
+        <div class="auth-split-form">
+            <div class="mb-4">
+                <h2 class="text-gradient">Welcome Back</h2>
+                <p class="text-secondary fs-7">Access your account to initiate neural objectivity scans.</p>
+            </div>
+
+            <form method="post" action="{% url 'login' %}" class="needs-validation" novalidate>
+                {% csrf_token %}
+
+                {% if form.errors %}
+                <div class="alert alert-danger glass-card border-0 mb-4 text-white" style="background: rgba(239,68,68,0.18);">
+                    <ul class="mb-0 fs-7">
                         {% for field in form %}
                             {% for error in field.errors %}
                             <li>{{ field.label }}: {{ error }}</li>
                             {% endfor %}
                         {% endfor %}
                         {% for error in form.non_field_errors %}
-                            <li>{{ error }}</li>
+                        <li>{{ error }}</li>
                         {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
-                    
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fas fa-user"></i>
-                            </span>
-                            <input type="text" class="form-control" id="username" name="username" 
-                                   placeholder="Enter your username" required>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fas fa-lock"></i>
-                            </span>
-                            <input type="password" class="form-control" id="password" name="password" 
-                                   placeholder="Enter your password" required>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="remember">
-                        <label class="form-check-label" for="remember">Remember me</label>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary w-100 py-2">
-                        <i class="fas fa-sign-in-alt me-2"></i> Sign In
-                    </button>
-                </form>
-                
-                <div class="text-center mt-4">
-                    <p>Don't have an account? 
-                        <a href="{% url 'register' %}" class="text-decoration-none">Register here</a>
-                    </p>
+                    </ul>
                 </div>
+                {% endif %}
+
+                <!-- Username Form Field -->
+                <div class="form-group-futuristic">
+                    <input type="text" class="form-input-futuristic" id="username" name="username"
+                        placeholder="Enter username" required>
+                    <i class="fas fa-user-astronaut form-input-icon"></i>
+                </div>
+
+                <!-- Password Form Field -->
+                <div class="form-group-futuristic">
+                    <input type="password" class="form-input-futuristic" id="password" name="password"
+                        placeholder="Enter password" required>
+                    <i class="fas fa-shield-halved form-input-icon"></i>
+                    <i class="fas fa-eye password-toggle-eye"></i>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <label class="checkbox-cyber-container">Remember neural session
+                        <input type="checkbox" id="remember">
+                        <span class="checkmark-cyber"></span>
+                    </label>
+                    <a href="#" id="forgot-password-trigger" class="fs-8 text-gradient text-decoration-none hover-lift">Forgot Password?</a>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-futuristic btn-cyber-primary w-100 py-3 mb-4">
+                    <i class="fas fa-right-to-bracket"></i> Initiating Authorization Session
+                </button>
+
+                <!-- Divider -->
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <hr class="flex-grow-1 border-secondary opacity-25">
+                    <span class="fs-8 text-secondary text-uppercase tracking-wider">or sign in with</span>
+                    <hr class="flex-grow-1 border-secondary opacity-25">
+                </div>
+
+                <!-- Social Logins -->
+                <div class="row g-3">
+                    <div class="col-6">
+                        <button type="button" id="google-login-btn" class="btn-social-futuristic">
+                            <i class="fab fa-google text-danger"></i> Google
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" id="github-login-btn" class="btn-social-futuristic">
+                            <i class="fab fa-github"></i> GitHub
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="text-center mt-5">
+                <p class="fs-8 text-secondary">
+                    New to the AI Integrity Platform? 
+                    <a href="{% url 'register' %}" class="text-gradient fw-semibold text-decoration-none ms-1">Create an Account</a>
+                </p>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Glassmorphic Modal for Social Auth Simulation -->
+<div id="social-modal" class="cyber-modal-overlay d-none">
+    <div class="cyber-modal glass-card">
+        <div class="modal-glowing-border"></div>
+        <div class="modal-content-wrapper text-center">
+            <div class="cyber-spinner-container mb-4">
+                <div class="cyber-spinner"></div>
+                <div class="cyber-spinner-inner"></div>
+                <i id="provider-icon" class="fab fa-google fs-2 text-gradient"></i>
+            </div>
+            <h3 class="text-gradient font-heading mb-3" id="social-modal-title">Secure Connection</h3>
+            <p class="text-secondary fs-7 mb-4" id="social-modal-status">Contacting authorization server...</p>
+            <div class="progress cyber-progress mb-3">
+                <div id="social-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: 0%"></div>
+            </div>
+            <div class="fs-9 text-muted text-uppercase tracking-wider" id="social-modal-subtext">Initializing handshaking protocol</div>
+        </div>
+    </div>
+</div>
+
+<!-- Glassmorphic Modal for Forgot Password -->
+<div id="forgot-modal" class="cyber-modal-overlay d-none">
+    <div class="cyber-modal glass-card">
+        <button type="button" id="close-forgot-modal" class="btn-close-cyber"><i class="fas fa-times"></i></button>
+        <div class="modal-glowing-border"></div>
+        
+        <!-- Step 1: Input Email -->
+        <div id="forgot-step-input" class="modal-content-wrapper">
+            <div class="text-center mb-4">
+                <div class="p-3 bg-dark bg-opacity-50 border border-secondary border-opacity-25 rounded-circle d-inline-block mb-3">
+                    <i class="fas fa-key text-info fs-3"></i>
+                </div>
+                <h3 class="text-gradient font-heading">Neural Reset</h3>
+                <p class="text-secondary fs-7">Initiate a cryptographically secure key recovery session.</p>
+            </div>
+            
+            <form id="forgot-password-form" onsubmit="handleForgotSubmit(event)">
+                <div class="form-group-futuristic mb-4">
+                    <input type="email" class="form-input-futuristic" id="forgot-email" placeholder="Enter recovery email address" required style="padding-left: 3rem !important;">
+                    <i class="fas fa-envelope form-input-icon"></i>
+                </div>
+                <button type="submit" class="btn-futuristic btn-cyber-primary w-100 py-3">
+                    <i class="fas fa-network-wired"></i> Transmit Recovery Sequence
+                </button>
+            </form>
+        </div>
+
+        <!-- Step 2: Animating/Transmitting -->
+        <div id="forgot-step-loading" class="modal-content-wrapper text-center d-none">
+            <div class="cyber-spinner-container mb-4">
+                <div class="cyber-spinner"></div>
+                <div class="cyber-spinner-inner"></div>
+                <i class="fas fa-satellite-dish fs-2 text-info"></i>
+            </div>
+            <h3 class="text-gradient font-heading mb-3">Transmitting...</h3>
+            <p class="text-secondary fs-7 mb-4" id="forgot-loading-status">Verifying terminal signature...</p>
+            <div class="progress cyber-progress mb-3">
+                <div id="forgot-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Step 3: Success -->
+        <div id="forgot-step-success" class="modal-content-wrapper text-center d-none">
+            <div class="p-3 bg-success bg-opacity-10 border border-success border-opacity-25 rounded-circle d-inline-block mb-3">
+                <i class="fas fa-paper-plane text-success fs-3"></i>
+            </div>
+            <h3 class="text-success font-heading mb-3">Transmission Confirmed</h3>
+            <p class="text-secondary fs-7 mb-4">
+                The quantum-encrypted reset code has been sent to:<br>
+                <strong class="text-white" id="success-email-display">email@address.com</strong>
+            </p>
+            <p class="text-muted fs-8 mb-4">Please check your inbox (including spam) to complete credentials override.</p>
+            <button type="button" id="forgot-success-close-btn" class="btn-futuristic btn-cyber-success w-100 py-3">
+                <i class="fas fa-check"></i> Acknowledge & Return
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Cyber Modal Styling */
+.cyber-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cyber-modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.cyber-modal {
+    max-width: 500px;
+    width: 90%;
+    background: rgba(15, 23, 42, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.15);
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.cyber-modal-overlay.active .cyber-modal {
+    transform: scale(1) translateY(0);
+}
+
+.modal-content-wrapper {
+    padding: 2.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.modal-glowing-border {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(var(--accent-primary-rgb), 0.3) 0%, rgba(var(--accent-secondary-rgb), 0.1) 50%, transparent 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+/* Spinner Custom Styling */
+.cyber-spinner-container {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cyber-spinner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 3px solid transparent;
+    border-top-color: var(--accent-primary);
+    border-bottom-color: var(--accent-cyan);
+    border-radius: 50%;
+    animation: cyberSpin 1.5s linear infinite;
+}
+
+.cyber-spinner-inner {
+    position: absolute;
+    width: 80%;
+    height: 80%;
+    border: 2px solid transparent;
+    border-left-color: var(--accent-secondary);
+    border-right-color: var(--accent-cyan);
+    border-radius: 50%;
+    animation: cyberSpinInner 1s linear infinite reverse;
+}
+
+@keyframes cyberSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes cyberSpinInner {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Progress bar cyber style */
+.cyber-progress {
+    height: 6px !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 10px !important;
+    overflow: hidden;
+}
+
+.cyber-progress .progress-bar {
+    border-radius: 10px;
+}
+
+.btn-close-cyber {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    transition: var(--transition-smooth);
+    cursor: pointer;
+    z-index: 10;
+}
+
+.btn-close-cyber:hover {
+    color: var(--text-primary);
+    transform: scale(1.1);
+}
+
+.btn-cyber-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #fff !important;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.btn-cyber-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Select elements
+    const forgotTrigger = document.getElementById('forgot-password-trigger');
+    const forgotModal = document.getElementById('forgot-modal');
+    const closeForgot = document.getElementById('close-forgot-modal');
+    const forgotSuccessClose = document.getElementById('forgot-success-close-btn');
+    
+    const googleBtn = document.getElementById('google-login-btn');
+    const githubBtn = document.getElementById('github-login-btn');
+    const socialModal = document.getElementById('social-modal');
+    
+    // Toggle forgot password modal
+    if (forgotTrigger && forgotModal) {
+        forgotTrigger.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Reset forgot modal states
+            document.getElementById('forgot-step-input').classList.remove('d-none');
+            document.getElementById('forgot-step-loading').classList.add('d-none');
+            document.getElementById('forgot-step-success').classList.add('d-none');
+            document.getElementById('forgot-email').value = '';
+            
+            forgotModal.classList.remove('d-none');
+            // Force redraw before animating
+            forgotModal.offsetHeight;
+            forgotModal.classList.add('active');
+        });
+    }
+
+    if (closeForgot && forgotModal) {
+        closeForgot.addEventListener('click', function() {
+            forgotModal.classList.remove('active');
+            setTimeout(() => forgotModal.classList.add('d-none'), 400);
+        });
+    }
+
+    if (forgotSuccessClose && forgotModal) {
+        forgotSuccessClose.addEventListener('click', function() {
+            forgotModal.classList.remove('active');
+            setTimeout(() => forgotModal.classList.add('d-none'), 400);
+        });
+    }
+
+    // Close on clicking overlay
+    if (forgotModal) {
+        forgotModal.addEventListener('click', function(e) {
+            if (e.target === forgotModal) {
+                forgotModal.classList.remove('active');
+                setTimeout(() => forgotModal.classList.add('d-none'), 400);
+            }
+        });
+    }
+
+    // Google Login Simulated Flow
+    if (googleBtn && socialModal) {
+        googleBtn.addEventListener('click', function() {
+            initiateSocialLogin('google');
+        });
+    }
+
+    // GitHub Login Simulated Flow
+    if (githubBtn && socialModal) {
+        githubBtn.addEventListener('click', function() {
+            initiateSocialLogin('github');
+        });
+    }
+
+    function initiateSocialLogin(provider) {
+        socialModal.classList.remove('d-none');
+        // Force redraw
+        socialModal.offsetHeight;
+        socialModal.classList.add('active');
+        
+        const titleEl = document.getElementById('social-modal-title');
+        const statusEl = document.getElementById('social-modal-status');
+        const subtextEl = document.getElementById('social-modal-subtext');
+        const progressBar = document.getElementById('social-progress-bar');
+        const iconEl = document.getElementById('provider-icon');
+        
+        // Setup icon class
+        iconEl.className = `fab fa-${provider} fs-2 text-gradient`;
+        if (provider === 'google') {
+            titleEl.textContent = 'Google Auth Signature';
+            iconEl.classList.add('text-danger');
+        } else {
+            titleEl.textContent = 'GitHub Auth Signature';
+            iconEl.classList.remove('text-danger');
+        }
+        
+        // Simulation progression
+        let progress = 0;
+        progressBar.style.width = '0%';
+        statusEl.textContent = `Establishing secure websocket to ${provider.toUpperCase()} Directory...`;
+        subtextEl.textContent = 'Initializing quantum handshaking';
+        
+        const interval = setInterval(() => {
+            progress += 10;
+            progressBar.style.width = `${progress}%`;
+            
+            if (progress === 30) {
+                statusEl.textContent = `Authenticating credentials & handshaking token...`;
+                subtextEl.textContent = 'Decrypting session certificates';
+            } else if (progress === 60) {
+                statusEl.textContent = 'Signature confirmed! Handshaking with CREDIBILITY.AI core...';
+                subtextEl.textContent = 'Syncing neural objectivity records';
+            } else if (progress === 90) {
+                statusEl.textContent = 'Connection established! Securing local sandbox...';
+                subtextEl.textContent = 'Handshake confirmed';
+            } else if (progress >= 100) {
+                clearInterval(interval);
+                // Redirect to our backend social login simulation URL!
+                window.location.href = `/auth/social/${provider}/`;
+            }
+        }, 150);
+    }
+});
+
+// Handle forgot password submission simulation
+function handleForgotSubmit(event) {
+    event.preventDefault();
+    const email = document.getElementById('forgot-email').value;
+    if (!email) return;
+
+    document.getElementById('forgot-step-input').classList.add('d-none');
+    document.getElementById('forgot-step-loading').classList.remove('d-none');
+    
+    const statusEl = document.getElementById('forgot-loading-status');
+    const progressBar = document.getElementById('forgot-progress-bar');
+    
+    let progress = 0;
+    progressBar.style.width = '0%';
+    statusEl.textContent = 'Verifying terminal signature & integrity...';
+    
+    const interval = setInterval(() => {
+        progress += 15;
+        progressBar.style.width = `${progress}%`;
+        
+        if (progress === 30) {
+            statusEl.textContent = 'Contacting neural key vault...';
+        } else if (progress === 60) {
+            statusEl.textContent = 'Generating unique one-time credential overrides...';
+        } else if (progress === 90) {
+            statusEl.textContent = 'Transmitting cryptographic sequence via secure network...';
+        } else if (progress >= 100) {
+            clearInterval(interval);
+            
+            // Show Success Step
+            document.getElementById('forgot-step-loading').classList.add('d-none');
+            document.getElementById('forgot-step-success').classList.remove('d-none');
+            document.getElementById('success-email-display').textContent = email;
+        }
+    }, 200);
+}
+</script>
 {% endblock %}

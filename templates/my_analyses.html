@@ -3,202 +3,264 @@
 {% block title %}My Analyses - Credibility Analysis System{% endblock %}
 
 {% block content %}
-<div class="container-fluid py-4">
-    <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-user-circle me-2"></i>{{ user.username }}
-                    </h5>
-                    <p class="text-muted mb-0">{{ user.email }}</p>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-body">
-                    <h6 class="card-subtitle mb-3 text-muted">Quick Actions</h6>
-                    <ul class="sidebar-menu">
-                        <li>
-                            <a href="{% url 'dashboard' %}">
-                                <i class="fas fa-home me-2"></i>Dashboard
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'analysis:analyze_text' %}">
-                                <i class="fas fa-search me-2"></i>Analyze Text
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'analysis:my_analyses' %}">
-                                <i class="fas fa-history me-2"></i>My Analyses
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'profile' %}">
-                                <i class="fas fa-cog me-2"></i>Profile Settings
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+<div class="container-fluid px-lg-5 py-4">
+    <div class="dashboard-grid-layout">
         
-        <!-- Main Content -->
-        <div class="col-md-9">
-            <h2 class="mb-4">
-                <i class="fas fa-history me-2"></i>My Analyses
-            </h2>
+        <!-- Left Sidebar Section -->
+        <aside class="glass-card sidebar-glass">
+            <div class="card-glowing-border"></div>
             
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-            
-            <!-- Statistics Cards -->
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <div class="card stat-card">
-                        <div class="stat-value">{{ total_analyses }}</div>
-                        <div class="stat-label">Total Analyses</div>
+            <!-- User Summary Details -->
+            <div class="text-center mb-4 pb-4 border-bottom border-secondary border-opacity-10">
+                <div class="position-relative d-inline-block mb-3">
+                    <div class="bg-gradient bg-opacity-25 rounded-circle p-1" style="background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); width: 75px; height: 75px; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                        <span class="fs-1 font-heading text-white fw-bold">{{ user.username|slice:":1"|upper }}</span>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="card stat-card">
-                        <div class="stat-value text-success">{{ credible_count }}</div>
-                        <div class="stat-label">Credible Results</div>
+                <h5 class="mb-1 text-white font-heading">{{ user.username }}</h5>
+                <p class="fs-8 text-secondary mb-0">{{ user.email }}</p>
+            </div>
+
+            <!-- Quick Action Links -->
+            <div class="mb-4">
+                <h6 class="fs-8 text-muted uppercase tracking-wider mb-3">Quick Navigation</h6>
+                <ul class="sidebar-menu-futuristic">
+                    <li>
+                        <a href="{% url 'dashboard' %}">
+                            <i class="fas fa-cubes"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'analysis:analyze_text' %}">
+                            <i class="fas fa-wand-magic-sparkles"></i> Analyze Text
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'analysis:my_analyses' %}" class="active">
+                            <i class="fas fa-chart-line"></i> My Analyses
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'profile' %}">
+                            <i class="fas fa-sliders"></i> Profile Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Right Content Section -->
+        <main class="w-100">
+            <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-3">
+                <div>
+                    <h2 class="text-gradient font-heading mb-1">ANALYSIS ARCHIVE</h2>
+                    <p class="text-secondary fs-7 mb-0">Historical logs of claims, structures, and parsed credentials.</p>
+                </div>
+                <!-- Action Tools -->
+                <div>
+                    <button type="button" 
+                            class="btn-futuristic btn-cyber-primary btn-sm py-2 px-3"
+                            data-total="{{ total_analyses }}"
+                            data-credible="{{ credible_count }}"
+                            onclick="exportResults({
+                                total: parseInt(this.getAttribute('data-total')) || 0,
+                                credible: parseInt(this.getAttribute('data-credible')) || 0,
+                                timestamp: Date.now()
+                            }, 'json')">
+                        <i class="fas fa-download me-1"></i> Export Archive Logs
+                    </button>
+                </div>
+            </div>
+
+            <!-- Visual Charts & Interactive Analytics Dashboards -->
+            {% if analyses %}
+            <div class="row g-4 mb-5">
+                <!-- Doughnut Chart: Credible vs Questionable -->
+                <div class="col-lg-5">
+                    <div class="glass-card h-100" style="min-height: 300px;">
+                        <div class="card-glowing-border"></div>
+                        <div class="card-header-glass">
+                            <h5 class="m-0 text-gradient fs-7"><i class="fas fa-chart-pie me-2 text-cyan"></i>Integrity Distribution</h5>
+                        </div>
+                        <div class="card-body p-4 d-flex align-items-center justify-content-center">
+                            <div style="width: 100%; height: 200px;">
+                                <canvas id="pieChartCanvas" 
+                                        data-credible="{{ credible_count }}" 
+                                        data-questionable="{{ questionable_count }}"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Line Trend Chart: Objectivity scores over time -->
+                <div class="col-lg-7">
+                    <div class="glass-card h-100" style="min-height: 300px;">
+                        <div class="card-glowing-border"></div>
+                        <div class="card-header-glass">
+                            <h5 class="m-0 text-gradient fs-7"><i class="fas fa-chart-line me-2 text-primary"></i>Score Index Progression</h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <div style="width: 100%; height: 200px;">
+                                <canvas id="lineChartCanvas" 
+                                        data-scores="[{% for a in analyses %}{% if a.result %}{% widthratio a.result.credibility_score 1 100 %}{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}]"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Analysis History Table -->
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">
-                        <i class="fas fa-list me-2"></i>Analysis History
-                    </h5>
+            {% endif %}
+
+            <!-- Table Search & Filter Tools -->
+            <div class="glass-card mb-4 p-3 bg-dark bg-opacity-30 border border-secondary border-opacity-10 d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-2 flex-grow-1" style="max-width: 450px;">
+                    <div class="position-relative w-100">
+                        <input type="text" id="cyber-search-input" class="form-input-futuristic py-2" placeholder="Search preview text claim..." style="padding-left: 2.2rem !important; background: rgba(0, 0, 0, 0.4) !important;">
+                        <i class="fas fa-search position-absolute text-muted fs-8" style="left: 1rem; top: 50%; transform: translateY(-50%);"></i>
+                    </div>
                 </div>
-                <div class="card-body">
+                
+                <div class="d-flex align-items-center gap-2">
+                    <span class="fs-8 text-secondary uppercase tracking-wider">Filter:</span>
+                    <select id="category-filter" class="form-select category-select-futuristic py-2" style="background: rgba(0, 0, 0, 0.4) !important; padding: 0.5rem 1rem !important; border-radius: var(--radius-sm) !important;">
+                        <option value="">All Categories</option>
+                        <option value="news">News Article</option>
+                        <option value="social">Social Media Post</option>
+                        <option value="review">Product Review</option>
+                        <option value="article">Blog Article</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Analysis History Table Card -->
+            <div class="glass-card">
+                <div class="card-glowing-border"></div>
+                <div class="card-header-glass">
+                    <h5 class="m-0 text-gradient"><i class="fas fa-list me-2"></i>Analysis Database Logs</h5>
+                    <span class="fs-8 text-secondary">Displaying entries chronologically</span>
+                </div>
+                
+                <div class="card-body p-0">
                     {% if analyses %}
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Category</th>
-                                        <th>Text Preview</th>
-                                        <th>Score</th>
-                                        <th>Result</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for analysis in analyses %}
-                                        <tr>
-                                            <td>{{ analysis.created_at|date:"M d, Y H:i" }}</td>
-                                            <td>
-                                                <span class="badge bg-secondary">{{ analysis.category|title }}</span>
-                                            </td>
-                                            <td>{{ analysis.text_content|truncatechars:40 }}</td>
-                                            <td>
-                                                {% if analysis.result %}
-                                                    <span class="badge 
-                                                        {% if analysis.result.credibility_score >= 70 %}bg-success
-                                                        {% elif analysis.result.credibility_score >= 40 %}bg-warning
-                                                        {% else %}bg-danger{% endif %}">
-                                                        {{ analysis.result.credibility_score|floatformat:1 }}%
-                                                    </span>
-                                                {% else %}
-                                                    <span class="badge bg-secondary">N/A</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                {% if analysis.result %}
-                                                    {% if analysis.result.is_credible %}
-                                                        <span class="text-success">
-                                                            <i class="fas fa-check-circle"></i> Credible
-                                                        </span>
-                                                    {% else %}
-                                                        <span class="text-danger">
-                                                            <i class="fas fa-times-circle"></i> Not Credible
-                                                        </span>
-                                                    {% endif %}
-                                                {% else %}
-                                                    <span class="text-muted">Pending</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                {% if analysis.result %}
-                                                    <a href="{% url 'analysis:analysis_detail' analysis.id %}" class="btn btn-sm btn-outline-primary">
-                                                        <i class="fas fa-eye"></i> View
-                                                    </a>
-                                                {% else %}
-                                                    <button class="btn btn-sm btn-outline-secondary" disabled>
-                                                        <i class="fas fa-clock"></i> Processing
-                                                    </button>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        {% if analyses.has_other_pages %}
-                            <nav aria-label="Analysis pagination">
-                                <ul class="pagination justify-content-center">
-                                    {% if analyses.has_previous %}
-                                        <li class="page-item">
-                                            <a class="page-link" href="?page={{ analyses.previous_page_number }}">Previous</a>
-                                        </li>
-                                    {% else %}
-                                        <li class="page-item disabled">
-                                            <span class="page-link">Previous</span>
-                                        </li>
-                                    {% endif %}
-                                    
-                                    {% for num in analyses.paginator.page_range %}
-                                        {% if analyses.number == num %}
-                                            <li class="page-item active">
-                                                <span class="page-link">{{ num }}</span>
-                                            </li>
-                                        {% elif num > analyses.number|add:'-3' and num < analyses.number|add:'3' %}
-                                            <li class="page-item">
-                                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                                            </li>
+                    <div class="table-responsive-cyber">
+                        <table class="table-cyber">
+                            <thead>
+                                <tr>
+                                    <th>Date Analyzed</th>
+                                    <th>Category</th>
+                                    <th>Text Preview Excerpt</th>
+                                    <th>Integrity Score</th>
+                                    <th>AI Classification</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for analysis in analyses %}
+                                <tr>
+                                    <td class="text-secondary fs-8">{{ analysis.created_at|date:"M d, Y H:i" }}</td>
+                                    <td><span class="ai-status-pill text-cyan bg-opacity-25 category-col" style="font-size: 0.7rem; border-color: rgba(6,182,212,0.1);">{{ analysis.category|title }}</span></td>
+                                    <td class="fw-semibold text-white text-preview-col">{{ analysis.text_content|truncatechars:45 }}</td>
+                                    <td>
+                                        {% if analysis.result %}
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="flex-grow-1 bg-secondary bg-opacity-10 rounded-pill overflow-hidden" style="width: 70px; height: 6px;">
+                                                <div class="bg-{% if analysis.result.credibility_score >= 0.7 %}success{% elif analysis.result.credibility_score >= 0.4 %}warning{% else %}danger{% endif %}" 
+                                                     style="height: 100%; --bar-width: {% widthratio analysis.result.credibility_score 1 100 %}%; width: var(--bar-width);"></div>
+                                            </div>
+                                            <span class="badge bg-{% if analysis.result.credibility_score >= 0.7 %}success{% elif analysis.result.credibility_score >= 0.4 %}warning{% else %}danger{% endif %} bg-opacity-10 text-{% if analysis.result.credibility_score >= 0.7 %}success{% elif analysis.result.credibility_score >= 0.4 %}warning{% else %}danger{% endif %} rounded" style="font-size: 0.72rem;">
+                                                {% widthratio analysis.result.credibility_score 1 100 %}%
+                                            </span>
+                                        </div>
+                                        {% else %}
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary" style="font-size: 0.72rem;">N/A</span>
                                         {% endif %}
-                                    {% endfor %}
-                                    
-                                    {% if analyses.has_next %}
-                                        <li class="page-item">
-                                            <a class="page-link" href="?page={{ analyses.next_page_number }}">Next</a>
-                                        </li>
-                                    {% else %}
-                                        <li class="page-item disabled">
-                                            <span class="page-link">Next</span>
-                                        </li>
-                                    {% endif %}
-                                </ul>
-                            </nav>
-                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if analysis.result %}
+                                            {% if analysis.result.is_credible %}
+                                            <span class="verdict-badge-futuristic verdict-credible" style="padding: 0.25rem 0.75rem; font-size: 0.7rem;">
+                                                <span class="pulse-dot bg-success" style="box-shadow: 0 0 5px #10b981; width: 5px; height: 5px;"></span> Credible
+                                            </span>
+                                            {% else %}
+                                            <span class="verdict-badge-futuristic verdict-questionable" style="padding: 0.25rem 0.75rem; font-size: 0.7rem;">
+                                                <span class="pulse-dot bg-danger" style="box-shadow: 0 0 5px #ef4444; width: 5px; height: 5px;"></span> Flagged
+                                            </span>
+                                            {% endif %}
+                                        {% else %}
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary fs-8 py-1 px-3">Pending</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if analysis.result %}
+                                        <a href="{% url 'analysis:analysis_detail' analysis.id %}" class="btn-futuristic btn-cyber-outline btn-sm py-2 px-3">
+                                            <i class="fas fa-circle-info"></i> View Diagnostics
+                                        </a>
+                                        {% else %}
+                                        <button class="btn-futuristic btn-cyber-outline btn-sm py-2 px-3 border-secondary" disabled>
+                                            <i class="fas fa-spinner fa-spin text-warning me-1"></i> Running Scans
+                                        </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Glassmorphic Pagination Controls -->
+                    {% if analyses.has_other_pages %}
+                    <nav class="p-3">
+                        <ul class="pagination-cyber justify-content-center">
+                            {% if analyses.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ analyses.previous_page_number }}"><i class="fas fa-chevron-left"></i> Previous</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link"><i class="fas fa-chevron-left"></i> Previous</span>
+                            </li>
+                            {% endif %}
+
+                            {% for num in analyses.paginator.page_range %}
+                                {% if analyses.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                                {% elif num > analyses.number|add:'-3' and num < analyses.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if analyses.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ analyses.next_page_number }}">Next <i class="fas fa-chevron-right"></i></a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">Next <i class="fas fa-chevron-right"></i></span>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                    
                     {% else %}
-                        <div class="text-center py-5">
-                            <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
-                            <h4 class="text-muted">No analyses yet</h4>
-                            <p class="text-muted">Start by analyzing your first text content.</p>
-                            <a href="{% url 'analysis:analyze_text' %}" class="btn btn-primary">
-                                <i class="fas fa-search me-2"></i>Analyze Text
-                            </a>
-                        </div>
+                    <!-- Empty Database State -->
+                    <div class="text-center py-5">
+                        <i class="fas fa-folder-open fa-3x text-muted mb-3 d-block"></i>
+                        <h4 class="text-secondary">No historical scans resolved</h4>
+                        <p class="text-muted fs-8">Run your first text credibility analysis to activate this logs matrix.</p>
+                        <a href="{% url 'analysis:analyze_text' %}" class="btn-futuristic btn-cyber-primary py-2 px-4 text-decoration-none">
+                            <i class="fas fa-wand-magic-sparkles"></i> Execute Initial Scan
+                        </a>
+                    </div>
                     {% endif %}
                 </div>
             </div>
-        </div>
+        </main>
+        
     </div>
 </div>
 {% endblock %}

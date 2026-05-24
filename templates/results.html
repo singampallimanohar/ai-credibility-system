@@ -1,223 +1,299 @@
 {% extends 'base.html' %}
 
-{% block title %}Analysis Results - Credibility Analysis System{% endblock %}
+{% block title %}Analysis Diagnostics - Credibility Analysis System{% endblock %}
 
 {% block content %}
-<div class="container results-container">
-    <!-- Back Button -->
-    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary mb-4">
-        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
-    </a>
+<div class="container py-5" style="max-width: 1000px;">
     
-    <!-- Results Header -->
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">
-                <i class="fas fa-chart-line me-2"></i>Analysis Results
-            </h4>
+    <!-- Navigation Back Link -->
+    <a href="{% url 'dashboard' %}" class="btn-futuristic btn-cyber-outline py-2 px-3 mb-5 text-decoration-none">
+        <i class="fas fa-arrow-left-long me-2"></i> Back to Dashboard
+    </a>
+
+    <!-- Top Diagnostics Verdict Card -->
+    <div class="glass-card mb-4">
+        <div class="card-glowing-border"></div>
+        <div class="card-header-glass">
+            <h4 class="m-0 text-gradient"><i class="fas fa-microscope me-2"></i>Integrity Diagnostics</h4>
+            <span class="ai-status-pill">
+                <span class="pulse-dot"></span> Classification Complete
+            </span>
         </div>
-        <div class="card-body">
-            <div class="row align-items-center">
-                <div class="col-md-6 text-center">
-                    <div class="score-badge 
-                        {% if result.score >= 0.7 %}score-high{% elif result.score >= 0.4 %}score-medium{% else %}score-low{% endif %}">
-                        {{ result.score|floatformat:2 }}
+
+        <div class="card-body p-4 p-md-5">
+            <div class="row g-4 align-items-center">
+                <!-- Circular Radial Gauge -->
+                <div class="col-md-5 text-center border-end border-secondary border-opacity-10">
+                    <div class="radial-score-container mb-3">
+                        <svg class="radial-score-svg" width="190" height="190">
+                            <!-- Background Circle -->
+                            <circle class="radial-score-bg" cx="95" cy="95" r="80"></circle>
+                            <!-- Foreground Arc -->
+                            <circle class="radial-score-bar {% if result.score >= 0.7 %}text-success{% elif result.score >= 0.4 %}text-warning{% else %}text-danger{% endif %}" 
+                                    cx="95" cy="95" r="80" 
+                                    data-score="{{ result.score }}"></circle>
+                        </svg>
+                        <div class="radial-score-text">
+                            <span class="radial-score-value text-white">
+                                <span class="animate-counter" data-target="{% widthratio result.score 1 100 %}">0</span>%
+                            </span>
+                            <span class="radial-score-label">Objectivity Index</span>
+                        </div>
                     </div>
-                    <h5 class="mt-3">{{ result.label }}</h5>
+                    
+                    <div class="mt-3">
+                        <span class="verdict-badge-futuristic {% if result.score >= 0.7 %}verdict-credible{% elif result.score >= 0.4 %}verdict-warning{% else %}verdict-questionable{% endif %}">
+                            <span class="pulse-dot"></span>
+                            {{ result.label }}
+                        </span>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-check-circle me-2 text-success"></i>Credible</span>
-                            <span class="badge bg-{% if result.is_credible %}success{% else %}danger{% endif %} rounded-pill">
-                                {% if result.is_credible %}Yes{% else %}No{% endif %}
+
+                <!-- Parameters list details -->
+                <div class="col-md-7 ps-md-4">
+                    <h5 class="text-white font-heading mb-4">Neural Analytics Core</h5>
+                    <ul class="list-group list-group-flush bg-transparent">
+                        <li class="list-group-item bg-transparent border-secondary border-opacity-10 px-0 d-flex justify-content-between align-items-center">
+                            <span class="text-secondary"><i class="fas fa-circle-check text-success me-2"></i> Integrity Status</span>
+                            <span class="badge bg-{% if result.is_credible %}success{% else %}danger{% endif %} bg-opacity-15 text-{% if result.is_credible %}success{% else %}danger{% endif %} fs-8 py-2 px-3 rounded-pill fw-bold">
+                                {% if result.is_credible %}Credible Content{% else %}Suspicious / Not Credible{% endif %}
                             </span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-percentage me-2 text-info"></i>Confidence</span>
-                            <span class="badge bg-primary rounded-pill">{{ result.confidence|title }}</span>
+                        <li class="list-group-item bg-transparent border-secondary border-opacity-10 px-0 d-flex justify-content-between align-items-center">
+                            <span class="text-secondary"><i class="fas fa-compass text-cyan me-2"></i> Classifier Confidence</span>
+                            <span class="badge bg-info bg-opacity-15 text-cyan fs-8 py-2 px-3 rounded-pill fw-bold uppercase">
+                                {{ result.confidence }} Confidence
+                            </span>
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 px-0 d-flex justify-content-between align-items-center">
+                            <span class="text-secondary"><i class="fas fa-clock text-primary me-2"></i> Scan Epoch Time</span>
+                            <span class="text-white fs-8 font-monospace">{{ analysis_request.created_at|date:"Y-m-d H:i:s" }} UTC</span>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
-    
-    <!-- Text Content -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5 class="mb-0">
-                <i class="fas fa-file-alt me-2"></i>Analyzed Content
-            </h5>
+
+    <!-- Content Excerpt Preview -->
+    <div class="glass-card mb-4">
+        <div class="card-glowing-border"></div>
+        <div class="card-header-glass">
+            <h5 class="m-0 text-gradient"><i class="fas fa-file-lines me-2"></i>Analyzed Manuscript Preview</h5>
+            <span class="fs-8 text-secondary">Original uploaded characters</span>
         </div>
-        <div class="card-body">
-            <p class="mb-0" style="white-space: pre-wrap;">{{ request.text_content }}</p>
-            
-            {% if request.source_url %}
-            <hr>
-            <p class="mb-0">
-                <strong>Source:</strong> 
-                <a href="{{ request.source_url }}" target="_blank">{{ request.source_url }}</a>
-            </p>
+        <div class="card-body p-4 bg-dark bg-opacity-20">
+            <p class="text-white mb-0" style="white-space: pre-wrap; font-size: 0.94rem; line-height: 1.6; max-height: 250px; overflow-y: auto; padding-right: 0.5rem;">{{ analysis_request.text_content }}</p>
+
+            {% if analysis_request.source_url %}
+            <div class="mt-4 pt-3 border-top border-secondary border-opacity-10 d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <span class="text-secondary fs-8"><i class="fas fa-link me-2 text-cyan"></i> Verified Reference URL:</span>
+                <a href="{{ analysis_request.source_url }}" target="_blank" class="text-gradient fw-bold text-decoration-none fs-8 hover-lift">{{ analysis_request.source_url }} <i class="fas fa-up-right-from-square ms-1"></i></a>
+            </div>
             {% endif %}
         </div>
     </div>
-    
-    <!-- Statistics -->
-    {% if stats %}
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5 class="mb-0">
-                <i class="fas fa-chart-bar me-2"></i>Content Statistics
-            </h5>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-3 text-center">
-                    <div class="stat-value">{{ stats.word_count }}</div>
-                    <div class="stat-label">Words</div>
+
+    <!-- Breakdown of Factors and Content Statistics side-by-side -->
+    <div class="row g-4 mb-4">
+        <!-- Content Stats -->
+        {% if stats %}
+        <div class="col-md-5">
+            <div class="glass-card h-100">
+                <div class="card-glowing-border"></div>
+                <div class="card-header-glass">
+                    <h5 class="m-0 text-gradient"><i class="fas fa-chart-simple me-2"></i>Linguistic Stats</h5>
                 </div>
-                <div class="col-md-3 text-center">
-                    <div class="stat-value">{{ stats.sentence_count }}</div>
-                    <div class="stat-label">Sentences</div>
-                </div>
-                <div class="col-md-3 text-center">
-                    <div class="stat-value">{{ stats.character_count }}</div>
-                    <div class="stat-label">Characters</div>
-                </div>
-                <div class="col-md-3 text-center">
-                    <div class="stat-value">{{ stats.avg_word_length|floatformat:1 }}</div>
-                    <div class="stat-label">Avg Word Length</div>
+                <div class="card-body p-4" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <!-- Words -->
+                    <div class="p-3 bg-dark bg-opacity-35 border border-secondary border-opacity-10 rounded-3 text-center">
+                        <div class="fs-4 fw-extrabold text-white animate-counter" data-target="{{ stats.word_count }}">0</div>
+                        <div class="fs-9 text-secondary uppercase tracking-wider mt-1">Word Count</div>
+                    </div>
+                    <!-- Sentences -->
+                    <div class="p-3 bg-dark bg-opacity-35 border border-secondary border-opacity-10 rounded-3 text-center">
+                        <div class="fs-4 fw-extrabold text-white animate-counter" data-target="{{ stats.sentence_count }}">0</div>
+                        <div class="fs-9 text-secondary uppercase tracking-wider mt-1">Sentences</div>
+                    </div>
+                    <!-- Characters -->
+                    <div class="p-3 bg-dark bg-opacity-35 border border-secondary border-opacity-10 rounded-3 text-center">
+                        <div class="fs-4 fw-extrabold text-white animate-counter" data-target="{{ stats.character_count }}">0</div>
+                        <div class="fs-9 text-secondary uppercase tracking-wider mt-1">Characters</div>
+                    </div>
+                    <!-- Word Length -->
+                    <div class="p-3 bg-dark bg-opacity-35 border border-secondary border-opacity-10 rounded-3 text-center">
+                        <div class="fs-4 fw-extrabold text-cyan"><span class="animate-counter" data-target="{{ stats.avg_word_length }}" data-decimals="true">0</span></div>
+                        <div class="fs-9 text-secondary uppercase tracking-wider mt-1">Avg Word Length</div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    {% endif %}
-    
-    <!-- Analysis Factors -->
-    {% if result.factors %}
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5 class="mb-0">
-                <i class="fas fa-list-ol me-2"></i>Analysis Factors
-            </h5>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Factor</th>
-                            <th>Score</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Length Score</td>
-                            <td>{{ result.factors.length_score|floatformat:2 }}</td>
-                            <td>
-                                {% if result.factors.length_score >= 0.7 %}
-                                <span class="badge bg-success">Good</span>
-                                {% elif result.factors.length_score >= 0.4 %}
-                                <span class="badge bg-warning">Fair</span>
-                                {% else %}
-                                <span class="badge bg-danger">Poor</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Indicator Score</td>
-                            <td>{{ result.factors.indicator_score|floatformat:2 }}</td>
-                            <td>
-                                {% if result.factors.indicator_score >= 0.7 %}
-                                <span class="badge bg-success">Credible Indicators</span>
-                                {% elif result.factors.indicator_score >= 0.4 %}
-                                <span class="badge bg-warning">Mixed</span>
-                                {% else %}
-                                <span class="badge bg-danger">Suspicious Indicators</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Structure Score</td>
-                            <td>{{ result.factors.structure_score|floatformat:2 }}</td>
-                            <td>
-                                {% if result.factors.structure_score >= 0.7 %}
-                                <span class="badge bg-success">Well Structured</span>
-                                {% elif result.factors.structure_score >= 0.4 %}
-                                <span class="badge bg-warning">Fair</span>
-                                {% else %}
-                                <span class="badge bg-danger">Poor Structure</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>URL Presence</td>
-                            <td>{% if result.factors.url_presence %}Yes{% else %}No{% endif %}</td>
-                            <td>
-                                {% if result.factors.url_presence %}
-                                <span class="badge bg-info">Source Included</span>
-                                {% else %}
-                                <span class="badge bg-secondary">No Source</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        {% endif %}
+
+        <!-- Heuristics Factors Breakdown -->
+        {% if result.factors %}
+        <div class="col-md-7">
+            <div class="glass-card h-100">
+                <div class="card-glowing-border"></div>
+                <div class="card-header-glass">
+                    <h5 class="m-0 text-gradient"><i class="fas fa-sliders me-2"></i>Neural Factor Analysis</h5>
+                </div>
+                <div class="card-body p-4 d-flex flex-column gap-3">
+                    
+                    <!-- Length Factor -->
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <span class="text-white fs-8 fw-semibold">Length Score Index</span>
+                            <span class="fs-8 text-secondary">{% widthratio result.factors.length_score|default:0 1 100 %}%</span>
+                        </div>
+                        <div class="bg-dark bg-opacity-40 rounded-pill overflow-hidden" style="height: 8px;">
+                            <div class="glow-bar-fill bg-primary" data-width="{% widthratio result.factors.length_score|default:0 1 100 %}" style="width: 0%; box-shadow: 0 0 10px rgba(59,130,246,0.6);"></div>
+                        </div>
+                    </div>
+
+                    <!-- Indicator Factor -->
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <span class="text-white fs-8 fw-semibold">Linguistic Indicators Score</span>
+                            <span class="fs-8 text-secondary">{% widthratio result.factors.indicator_score|default:0 1 100 %}%</span>
+                        </div>
+                        <div class="bg-dark bg-opacity-40 rounded-pill overflow-hidden" style="height: 8px;">
+                            <div class="glow-bar-fill bg-success" data-width="{% widthratio result.factors.indicator_score|default:0 1 100 %}" style="width: 0%; box-shadow: 0 0 10px rgba(16,185,129,0.6);"></div>
+                        </div>
+                    </div>
+
+                    <!-- Structure Factor -->
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <span class="text-white fs-8 fw-semibold">Formatting & Syntactic Structure</span>
+                            <span class="fs-8 text-secondary">{% widthratio result.factors.structure_score|default:0 1 100 %}%</span>
+                        </div>
+                        <div class="bg-dark bg-opacity-40 rounded-pill overflow-hidden" style="height: 8px;">
+                            <div class="glow-bar-fill bg-secondary" data-width="{% widthratio result.factors.structure_score|default:0 1 100 %}" style="width: 0%; box-shadow: 0 0 10px rgba(139,92,246,0.6);"></div>
+                        </div>
+                    </div>
+
+                    <!-- URL Source Authority presence -->
+                    <div class="d-flex align-items-center justify-content-between p-2 bg-dark bg-opacity-35 border border-secondary border-opacity-10 rounded-3 mt-1">
+                        <span class="fs-8 text-secondary"><i class="fas fa-link me-2 text-cyan"></i> References validation verified:</span>
+                        <span class="badge bg-{% if result.factors.url_presence %}success{% else %}danger{% endif %} bg-opacity-15 text-{% if result.factors.url_presence %}success{% else %}danger{% endif %} fs-9 py-1 px-3">
+                            {% if result.factors.url_presence %}Source Included{% else %}No External References{% endif %}
+                        </span>
+                    </div>
+
+                </div>
             </div>
         </div>
+        {% endif %}
     </div>
-    {% endif %}
-    
-    <!-- Recommendations -->
+
+    <!-- Core Recommendations bulb Card -->
     {% if result.recommendations %}
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5 class="mb-0">
-                <i class="fas fa-lightbulb me-2"></i>Recommendations
-            </h5>
+    <div class="glass-card mb-4" style="background: linear-gradient(135deg, rgba(6,182,212,0.05) 0%, rgba(15,23,42,0.6) 100%);">
+        <div class="card-glowing-border" style="background: linear-gradient(135deg, rgba(6,182,212,0.2) 0%, transparent 100%);"></div>
+        <div class="card-header-glass">
+            <h5 class="m-0 text-gradient"><i class="fas fa-lightbulb me-2 text-cyan"></i>AI Structural Directives</h5>
+            <span class="fs-8 text-secondary">Optimization strategies</span>
         </div>
-        <div class="card-body">
-            <p class="mb-0">{{ result.recommendations }}</p>
+        <div class="card-body p-4">
+            <p class="text-white fs-7 mb-0" style="line-height: 1.7;"><i class="fas fa-terminal me-2 text-cyan fs-8"></i>{{ result.recommendations }}</p>
         </div>
     </div>
     {% endif %}
-    
-    <!-- Feedback Section -->
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0">
-                <i class="fas fa-comment-dots me-2"></i>Rate This Analysis
-            </h5>
+
+    <!-- User Feedback Interactive Form Redesign -->
+    <div class="glass-card">
+        <div class="card-glowing-border"></div>
+        <div class="card-header-glass">
+            <h5 class="m-0 text-gradient"><i class="fas fa-comments me-2 text-primary"></i>Diagnostics Feedback Loop</h5>
+            <span class="fs-8 text-secondary">Refining classifier networks</span>
         </div>
-        <div class="card-body">
-            <form method="post" action="{% url 'analysis:submit_feedback' result_id=request.result.id %}">
+        
+        <div class="card-body p-4">
+            <form method="post" action="{% url 'analysis:submit_feedback' result_id=analysis_request.result.id %}">
                 {% csrf_token %}
-                <div class="mb-3">
-                    <label class="form-label">How accurate was this analysis?</label>
-                    <div class="d-flex gap-3">
+                
+                <div class="mb-4">
+                    <label class="form-label text-secondary fw-semibold fs-8 uppercase tracking-wider mb-3">How accurate was this credibility score?</label>
+                    <div class="d-flex flex-wrap gap-3">
                         {% for value, label in feedback_choices %}
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="rating" 
-                                   id="rating{{ value }}" value="{{ value }}" required>
-                            <label class="form-check-label" for="rating{{ value }}">
-                                {{ label }}
+                        <div>
+                            <label class="checkbox-cyber-container fs-8">{{ label }}
+                                <input type="radio" name="rating" id="rating{{ value }}" value="{{ value }}" required>
+                                <span class="checkmark-cyber" style="border-radius: 50%;"></span>
                             </label>
                         </div>
                         {% endfor %}
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label for="comment" class="form-label">Additional Comments (Optional)</label>
-                    <textarea class="form-control" id="comment" name="comment" 
-                              rows="3" placeholder="Share your thoughts..."></textarea>
+
+                <div class="mb-4">
+                    <label for="comment" class="form-label text-secondary fw-semibold fs-8 uppercase tracking-wider mb-2">Linguistic feedback & corrections (Optional)</label>
+                    <textarea class="form-control textarea-futuristic" id="comment" name="comment" rows="3" placeholder="Share specific errors, suggestions, or insights..."></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-paper-plane me-2"></i>Submit Feedback
+
+                <button type="submit" class="btn-futuristic btn-cyber-primary py-3 px-4">
+                    <i class="fas fa-paper-plane"></i> Deploy Feedback Response
                 </button>
             </form>
         </div>
     </div>
+
 </div>
+
+<!-- High-Fidelity SVG Circular Gauge & Counter Easing Animation Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Smoothly Animate the Radial circular score gauge
+        const scoreBar = document.querySelector('.radial-score-bar');
+        if (scoreBar) {
+            const score = parseFloat(scoreBar.getAttribute('data-score')) || 0;
+            const circumference = 502; // 2 * Math.PI * r (80)
+            const offset = circumference - (score * circumference);
+            
+            // Introduce a subtle cinematic entry delay
+            setTimeout(() => {
+                scoreBar.style.strokeDashoffset = offset;
+            }, 250);
+        }
+
+        // 2. High-Fidelity Numeric eased counters
+        const counters = document.querySelectorAll('.animate-counter');
+        counters.forEach(counter => {
+            const target = parseFloat(counter.getAttribute('data-target')) || 0;
+            const isDecimal = counter.getAttribute('data-decimals') === 'true';
+            const duration = 1600; // Eased over 1.6s
+            const startTime = performance.now();
+            
+            function updateCounter(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Cubic ease-out curve for premium SaaS transitions
+                const easeProgress = 1 - Math.pow(1 - progress, 3);
+                const currentValue = easeProgress * target;
+                
+                if (isDecimal) {
+                    counter.textContent = currentValue.toFixed(1);
+                } else {
+                    counter.textContent = Math.floor(currentValue);
+                }
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                }
+            }
+            requestAnimationFrame(updateCounter);
+        });
+
+        // 3. Smoothly Animate and Transition the Glow Progress Bars
+        const glowBars = document.querySelectorAll('.glow-bar-fill');
+        glowBars.forEach(bar => {
+            const width = bar.getAttribute('data-width') || '0';
+            setTimeout(() => {
+                bar.style.width = width + '%';
+            }, 300);
+        });
+    });
+</script>
 {% endblock %}

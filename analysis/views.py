@@ -78,7 +78,7 @@ def analyze_text(request):
         
         context = {
             'result': formatted_result,
-            'request': analysis_request,
+            'analysis_request': analysis_request,
             'stats': calculate_text_stats(text_content),
             'urls': extract_urls(text_content),
             'feedback_choices': FEEDBACK_CHOICES,
@@ -108,7 +108,7 @@ def analysis_detail(request, analysis_id):
     
     context = {
         'result': formatted_result,
-        'request': analysis_request,
+        'analysis_request': analysis_request,
         'stats': calculate_text_stats(analysis_request.text_content),
         'urls': extract_urls(analysis_request.text_content),
         'feedback_choices': FEEDBACK_CHOICES,
@@ -158,11 +158,13 @@ def my_analyses(request):
         analysis_request__user=request.user,
         is_credible=True
     ).count()
+    questionable_count = total_analyses - credible_count
     
     context = {
         'analyses': analyses,
         'total_analyses': total_analyses,
         'credible_count': credible_count,
+        'questionable_count': questionable_count,
     }
     
     return render(request, 'my_analyses.html', context)

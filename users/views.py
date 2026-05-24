@@ -73,9 +73,14 @@ def profile(request):
     
     user = request.user
     
+    try:
+        profile_instance = user.profile
+    except UserProfile.DoesNotExist:
+        profile_instance = UserProfile.objects.create(user=user)
+        
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, instance=user)
-        profile_form = UserProfileForm(request.POST, instance=user.profile)
+        profile_form = UserProfileForm(request.POST, instance=profile_instance)
         
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
@@ -84,7 +89,7 @@ def profile(request):
             return redirect('profile')
     else:
         user_form = UserUpdateForm(instance=user)
-        profile_form = UserProfileForm(instance=user.profile)
+        profile_form = UserProfileForm(instance=profile_instance)
     
     # Get analysis history
     history = AnalysisHistory.objects.filter(user=user).order_by('-analyzed_at')[:10]
@@ -107,3 +112,21 @@ def analysis_history(request):
         'history': history
     }
     return render(request, 'analysis_history.html', context)
+
+
+def social_login_sim(request, provider):
+    """Simulates social login using Google/GitHub in a sandbox environment."""
+    from django.contrib.auth.models import User
+    
+    # Try to find a user or create a premium sandbox user
+    username = f"sandbox_{provider}"
+    email = f"{provider}_user@credibility.ai"
+    
+    user, created = User.objects.get_or_create(username=username, defaults={'email': email})
+    if created:
+        user.set_unusable_password()
+        user.save()
+        
+    login(request, user)
+    messages.success(request, f'Successfully authenticated via {provider.capitalize()}! Welcome to the AI Platform.')
+    return redirect('dashboard')
