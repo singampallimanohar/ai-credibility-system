@@ -98,15 +98,22 @@ User Input → Credibility Analysis Engine → Trust Evaluation → Database Sto
 
 ---
 
-## Author
+## 🌐 Live Demo
 
-**Singampalli Manohar**
+🚀 **Live Application:** https://credibility-system.onrender.com
 
-GitHub:
-https://github.com/singampallimanohar
+### GitHub Repository
+
+💻 **Source Code:** https://github.com/singampallimanohar/ai-credibility-system
 
 ---
 
-## License
+## 👨‍💻 Author
 
-This project is licensed under the MIT License.
+**Singampalli Manohar**
+
+GitHub: https://github.com/singampallimanohar
+
+LinkedIn: https://www.linkedin.com/in/singampallimanohar
+
+---
