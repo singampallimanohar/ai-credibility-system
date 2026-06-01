@@ -73,25 +73,6 @@ User Input → Credibility Analysis Engine → Trust Evaluation → Database Sto
 
 ---
 
-
-
----
-
-## Live Deployment
-
-**Live Application:**
-
-Add your Render deployment URL here.
-
-Example:
-
-```text
-https://your-app-name.onrender.com
-```
-
-
----
-
 ## Future Enhancements
 
 * AI-Powered Fake News Detection
