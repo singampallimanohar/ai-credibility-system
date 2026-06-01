@@ -8,9 +8,10 @@ class AnalysisRequest(models.Model):
     CATEGORY_CHOICES = [
         ('news', 'News Article'),
         ('social', 'Social Media Post'),
-        ('review', 'Product Review'),
-        ('article', 'Blog Article'),
-        ('other', 'Other'),
+        ('review', 'User Review'),
+        ('blog', 'Blog Content'),
+        ('forum', 'Forum Discussion'),
+        ('other', 'Other / General'),
     ]
     
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='analysis_requests')

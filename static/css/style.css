@@ -1311,11 +1311,11 @@ p {
 
 /* Fallbacks for standard Django rendered forms with bootstrap's .form-control */
 .form-control,
-.glass-card input[type="text"],
-.glass-card input[type="email"],
-.glass-card input[type="tel"],
-.glass-card textarea,
-.glass-card select {
+.glass-card input[type="text"]:not(.form-input-futuristic),
+.glass-card input[type="email"]:not(.form-input-futuristic),
+.glass-card input[type="tel"]:not(.form-input-futuristic),
+.glass-card textarea:not(.textarea-futuristic):not(.form-input-futuristic),
+.glass-card select:not(.category-select-futuristic) {
     background: rgba(0, 0, 0, 0.2) !important;
     border: 1px solid var(--card-border) !important;
     border-radius: var(--radius-md) !important;
@@ -1326,17 +1326,35 @@ p {
     transition: var(--transition-smooth) !important;
 }
 
-.form-control:focus,
-.glass-card input[type="text"]:focus,
-.glass-card input[type="email"]:focus,
-.glass-card input[type="tel"]:focus,
-.glass-card textarea:focus,
-.glass-card select:focus {
-    background: rgba(0, 0, 0, 0.25) !important;
-    border-color: rgba(var(--accent-primary-rgb), 0.5) !important;
-    box-shadow: 0 0 20px 0 rgba(var(--accent-primary-rgb), 0.15) !important;
-    color: var(--text-primary) !important;
-    outline: none;
+/* Custom Category Selector with Cyan Caret and Neon Borders */
+.category-select-futuristic {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2306b6d4' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 1rem center !important;
+    background-size: 16px 12px !important;
+    appearance: none !important;
+    background-color: rgba(0, 0, 0, 0.25) !important;
+    border: 1px solid rgba(6, 182, 212, 0.3) !important;
+    border-radius: var(--radius-md) !important;
+    color: #f8fafc !important;
+    padding: 0.9rem 2.5rem 0.9rem 1.2rem !important; /* right padding to avoid text overlapping the custom arrow */
+    font-size: 0.95rem !important;
+    width: 100% !important;
+    transition: var(--transition-smooth) !important;
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.05) !important;
+}
+
+.category-select-futuristic:focus {
+    background-color: rgba(0, 0, 0, 0.35) !important;
+    border-color: rgba(139, 92, 246, 0.6) !important;
+    box-shadow: 0 0 20px 0 rgba(139, 92, 246, 0.2) !important;
+    color: #ffffff !important;
+    outline: none !important;
+}
+
+.category-select-futuristic option {
+    background-color: #0b1120 !important;
+    color: #f8fafc !important;
 }
 
 /* SVG Radial Score Bar Color Variants */
@@ -1353,4 +1371,45 @@ p {
 .radial-score-bar.text-danger {
     stroke: #ef4444 !important;
     filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.5)) !important;
+}
+
+/* Cyberpunk select dropdown custom styling options */
+select.category-select-futuristic option,
+.glass-card select option,
+.form-control option,
+select option {
+    background-color: #0b1120 !important;
+    color: #f8fafc !important;
+}
+
+/* Premium Cyber Badge Utility Classes */
+.badge-cyber-success {
+    background: rgba(16, 185, 129, 0.15) !important;
+    color: #10b981 !important;
+    border: 1px solid rgba(16, 185, 129, 0.2) !important;
+}
+
+.badge-cyber-danger {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #ef4444 !important;
+    border: 1px solid rgba(239, 68, 68, 0.2) !important;
+}
+
+.badge-cyber-info {
+    background: rgba(6, 182, 212, 0.15) !important;
+    color: #06b6d4 !important;
+    border: 1px solid rgba(6, 182, 212, 0.2) !important;
+}
+
+/* Custom Cyber Alert Styling to avoid Template Linter warnings in HTML */
+.alert-cyber-danger {
+    background: rgba(239, 68, 68, 0.18) !important;
+    border: 1px solid rgba(239, 68, 68, 0.25) !important;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.1) !important;
+}
+
+.alert-cyber-info {
+    background: rgba(6, 182, 212, 0.18) !important;
+    border: 1px solid rgba(6, 182, 212, 0.25) !important;
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.1) !important;
 }

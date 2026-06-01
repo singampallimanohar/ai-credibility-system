@@ -20,6 +20,11 @@ document.addEventListener('DOMContentLoaded', function () {
     initCircularGauge();
     initMetricCounters();
     initChartDashboards();
+    initProgressBarWidths();
+
+    // Cyberpunk Dashboard Integrations
+    initBotThreatMonitor();
+    initDatasetParser();
 
     // System Utilities
     initToastsAndAlerts();
@@ -431,6 +436,21 @@ function initMetricCounters() {
 }
 
 // ============================================
+// Dynamic Progress/Glow Bars Initialization
+// ============================================
+function initProgressBarWidths() {
+    const glowBars = document.querySelectorAll('.glow-bar-fill');
+    glowBars.forEach(bar => {
+        const width = bar.getAttribute('data-width');
+        if (width !== null) {
+            setTimeout(() => {
+                bar.style.width = width.trim().endsWith('%') ? width : `${width}%`;
+            }, 300);
+        }
+    });
+}
+
+// ============================================
 // Interactive Statistics Dashboards (Chart.js)
 // ============================================
 function initChartDashboards() {
@@ -440,6 +460,15 @@ function initChartDashboards() {
     }
     if (document.getElementById('lineChartCanvas')) {
         renderLineChart();
+    }
+    if (document.getElementById('trustProgressionChart')) {
+        renderTrustProgressionChart();
+    }
+    if (document.getElementById('modelLossChart')) {
+        renderModelLossChart();
+    }
+    if (document.getElementById('categoryDistributionChart')) {
+        renderCategoryDistributionChart();
     }
 }
 
@@ -647,3 +676,351 @@ window.exportResults = function (data, format) {
         showToast('Archive logs exported successfully!', 'success');
     }
 };
+
+// ============================================
+// Real-time Cyberpunk Bot Threat Monitor Feed
+// ============================================
+function initBotThreatMonitor() {
+    const container = document.getElementById('threat-feed-container');
+    if (!container) return;
+
+    const mockLogs = [
+        { type: 'danger', msg: '[BOT THREAT] High-frequency payload velocity detected at Node-802.' },
+        { type: 'warning', msg: '[BIAS ANOMALY] Heavy syntactic sentiment drift matched profile #41.' },
+        { type: 'success', msg: '[SYSTEM INTEGRITY] Verified references lookup matched authority database.' },
+        { type: 'warning', msg: '[SECURITY BLOCK] Repetitive structural velocity exceeds limits: IP 172.16.8.20.' },
+        { type: 'danger', msg: '[MALWARE SUSPECT] Lexical payload anomaly detected on user review scan.' },
+        { type: 'success', msg: '[SCAN OK] Objectivity profile validated at 94.6% confidence.' }
+    ];
+
+    function appendLog() {
+        const log = mockLogs[Math.floor(Math.random() * mockLogs.length)];
+        const badgeColor = log.type === 'danger' ? 'bg-danger text-danger' : log.type === 'warning' ? 'bg-warning text-warning' : 'bg-success text-success';
+        const logItem = document.createElement('div');
+        logItem.className = 'd-flex align-items-start gap-2 p-2 bg-dark bg-opacity-25 rounded border border-secondary border-opacity-10 fs-9';
+        logItem.style.opacity = '0';
+        logItem.style.transform = 'translateX(20px)';
+        logItem.style.transition = 'all 0.4s ease';
+
+        logItem.innerHTML = `
+            <span class="badge ${badgeColor} bg-opacity-15 px-2 py-1 rounded font-monospace uppercase" style="font-size: 0.65rem;">
+                ${log.type}
+            </span>
+            <span class="text-white font-monospace" style="line-height: 1.3;">${log.msg}</span>
+        `;
+
+        container.prepend(logItem);
+
+        // Animate in
+        setTimeout(() => {
+            logItem.style.opacity = '1';
+            logItem.style.transform = 'translateX(0)';
+        }, 50);
+
+        // Keep last 5 elements only
+        const items = container.querySelectorAll('& > div');
+        if (items.length > 5) {
+            const lastItem = items[items.length - 1];
+            lastItem.style.opacity = '0';
+            lastItem.style.transform = 'translateY(10px)';
+            setTimeout(() => lastItem.remove(), 400);
+        }
+    }
+
+    // Populate initial logs
+    for (let i = 0; i < 4; i++) {
+        setTimeout(appendLog, i * 300);
+    }
+
+    // Periodically append new logs
+    setInterval(appendLog, 4200);
+}
+
+// ============================================
+// Batch Dataset Drag & Drop Parser Simulation
+// ============================================
+function initDatasetParser() {
+    const dragZone = document.getElementById('dataset-drag-zone');
+    const fileInput = document.getElementById('dataset-file-input');
+    const progressSection = document.getElementById('dataset-parsing-progress');
+    const progressBar = document.getElementById('parsing-progress-bar');
+    const progressPercent = document.getElementById('parsing-progress-percent');
+    const logBox = document.getElementById('dataset-parsing-logs');
+
+    if (!dragZone || !logBox) return;
+
+    dragZone.addEventListener('click', () => {
+        if (fileInput) fileInput.click();
+    });
+
+    if (fileInput) {
+        fileInput.addEventListener('change', function () {
+            simulateParsing(this.files[0]);
+        });
+    }
+
+    // Drag highlights
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dragZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dragZone.style.borderColor = 'var(--accent-secondary)';
+            dragZone.style.background = 'rgba(139, 92, 246, 0.05)';
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dragZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dragZone.style.borderColor = 'rgba(6, 182, 212, 0.2)';
+            dragZone.style.background = 'transparent';
+        }, false);
+    });
+
+    dragZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const files = e.dataTransfer.files;
+        if (files.length > 0) simulateParsing(files[0]);
+    });
+
+    function simulateParsing(file) {
+        if (!file) return;
+        const validExtensions = ['.csv', '.json'];
+        const fileExt = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+
+        if (!validExtensions.includes(fileExt)) {
+            showToast('Unsupported file type! Upload CSV or JSON only.', 'error');
+            return;
+        }
+
+        // Reset and show progress UI
+        progressSection.classList.remove('d-none');
+        progressBar.style.width = '0%';
+        progressPercent.textContent = '0%';
+        logBox.innerHTML = `[SYSTEM] Processing file: ${file.name}<br>[SYSTEM] Upload size: ${(file.size / 1024).toFixed(2)} KB`;
+
+        const logMessages = [
+            { time: 500, msg: '[INFO] Initializing asynchronous dataset parser stream...' },
+            { time: 1000, msg: '[INFO] Loading structural schema and integrity keys...' },
+            { time: 1600, msg: '[INFO] Neural pipeline scan started for 1,240 records...' },
+            { time: 2200, msg: '[WARN] Identified bot profile signature matching in 12 records.' },
+            { time: 2800, msg: '[INFO] Objectivity clustering complete. Generating weights...' },
+            { time: 3300, msg: '[SUCCESS] Bulk diagnostic review completed successfully!' }
+        ];
+
+        // Animate progress bar
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+            progress += 2;
+            progressBar.style.width = `${progress}%`;
+            progressPercent.textContent = `${progress}%`;
+
+            if (progress >= 100) {
+                clearInterval(progressInterval);
+                showToast('Batch dataset scan completed successfully!', 'success');
+            }
+        }, 70);
+
+        // Inject log messages
+        logMessages.forEach(log => {
+            setTimeout(() => {
+                logBox.innerHTML += `<br>${log.msg}`;
+                logBox.scrollTop = logBox.scrollHeight;
+            }, log.time);
+        });
+    }
+}
+
+// ============================================
+// Interactive Trust Anomaly Progression (Chart.js)
+// ============================================
+function renderTrustProgressionChart() {
+    const canvas = document.getElementById('trustProgressionChart');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, 160);
+    gradient.addColorStop(0, 'rgba(6, 182, 212, 0.35)');
+    gradient.addColorStop(1, 'rgba(6, 182, 212, 0.0)');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Scan 01', 'Scan 02', 'Scan 03', 'Scan 04', 'Scan 05', 'Scan 06'],
+            datasets: [{
+                label: 'Global Credibility Ratio',
+                data: [72, 85, 61, 93, 80, 96],
+                borderColor: '#06b6d4',
+                borderWidth: 3,
+                backgroundColor: gradient,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#06b6d4',
+                pointBorderColor: '#ffffff',
+                pointHoverRadius: 6,
+                pointRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#64748b', font: { size: 9, family: 'monospace' } }
+                },
+                y: {
+                    min: 0,
+                    max: 100,
+                    grid: { color: 'rgba(255, 255, 255, 0.04)' },
+                    ticks: { color: '#64748b', font: { size: 9, family: 'monospace' }, stepSize: 25 }
+                }
+            }
+        }
+    });
+}
+
+// ============================================
+// Deep ML Diagnostics: Model Loss Curve Chart
+// ============================================
+function renderModelLossChart() {
+    const canvas = document.getElementById('modelLossChart');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    
+    // Create gradients for curves
+    const trainGradient = ctx.createLinearGradient(0, 0, 0, 200);
+    trainGradient.addColorStop(0, 'rgba(6, 182, 212, 0.25)');
+    trainGradient.addColorStop(1, 'rgba(6, 182, 212, 0.0)');
+
+    const valGradient = ctx.createLinearGradient(0, 0, 0, 200);
+    valGradient.addColorStop(0, 'rgba(139, 92, 246, 0.25)');
+    valGradient.addColorStop(1, 'rgba(139, 92, 246, 0.0)');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Epoch 01', 'Epoch 05', 'Epoch 10', 'Epoch 15', 'Epoch 20', 'Epoch 25'],
+            datasets: [
+                {
+                    label: 'Training Loss',
+                    data: [0.65, 0.42, 0.28, 0.15, 0.08, 0.04],
+                    borderColor: '#06b6d4',
+                    borderWidth: 2,
+                    backgroundColor: trainGradient,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#06b6d4',
+                    pointBorderColor: '#ffffff',
+                    pointRadius: 3
+                },
+                {
+                    label: 'Validation Loss',
+                    data: [0.70, 0.48, 0.32, 0.19, 0.11, 0.06],
+                    borderColor: '#8b5cf6',
+                    borderWidth: 2,
+                    backgroundColor: valGradient,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#8b5cf6',
+                    pointBorderColor: '#ffffff',
+                    pointRadius: 3
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: { color: '#94a3b8', font: { size: 9, family: 'monospace' } }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#64748b', font: { size: 9, family: 'monospace' } }
+                },
+                y: {
+                    min: 0,
+                    max: 1,
+                    grid: { color: 'rgba(255, 255, 255, 0.04)' },
+                    ticks: { color: '#64748b', font: { size: 9, family: 'monospace' }, stepSize: 0.25 }
+                }
+            }
+        }
+    });
+}
+
+// ============================================
+// Deep ML Diagnostics: Category Radar Density Chart
+// ============================================
+function renderCategoryDistributionChart() {
+    const canvas = document.getElementById('categoryDistributionChart');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    
+    // Parse labels and counts from the Django json_script element or fallback to defaults
+    let labels = [];
+    let counts = [];
+
+    const jsonTag = document.getElementById('category-data');
+    if (jsonTag) {
+        try {
+            const dataObj = JSON.parse(jsonTag.textContent);
+            labels = Object.keys(dataObj);
+            counts = Object.values(dataObj);
+        } catch (e) {
+            console.error('Error parsing category-data JSON', e);
+        }
+    }
+
+    if (labels.length === 0) {
+        // Fallback default mock data for design presentation
+        labels = ['News Article', 'Social Media Post', 'User Review', 'Blog Content', 'Forum Discussion', 'Other / General'];
+        counts = [34, 45, 18, 22, 11, 8];
+    }
+
+    const radarGradient = ctx.createLinearGradient(0, 0, 0, 200);
+    radarGradient.addColorStop(0, 'rgba(139, 92, 246, 0.35)');
+    radarGradient.addColorStop(1, 'rgba(6, 182, 212, 0.1)');
+
+    new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Payload Scans Count',
+                data: counts,
+                borderColor: '#8b5cf6',
+                borderWidth: 2,
+                backgroundColor: radarGradient,
+                fill: true,
+                pointBackgroundColor: '#06b6d4',
+                pointBorderColor: '#ffffff',
+                pointHoverRadius: 6,
+                pointRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                r: {
+                    angleLines: { color: 'rgba(255, 255, 255, 0.06)' },
+                    grid: { color: 'rgba(255, 255, 255, 0.06)' },
+                    pointLabels: { color: '#94a3b8', font: { size: 9, family: 'monospace' } },
+                    ticks: { display: false }
+                }
+            }
+        }
+    });
+}

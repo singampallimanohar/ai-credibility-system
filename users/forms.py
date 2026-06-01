@@ -82,3 +82,59 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('email', 'first_name', 'last_name')
+
+
+class ForgotPasswordEmailForm(forms.Form):
+    """Form to request password recovery by entering registered email."""
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={
+            'class': 'form-input-futuristic',
+            'placeholder': 'Enter your registered email address',
+            'style': 'padding-left: 1.5rem !important;'
+        })
+    )
+
+
+class ForgotPasswordOTPVerifyForm(forms.Form):
+    """Form to verify the secure 6-digit numeric OTP code."""
+    otp_code = forms.CharField(
+        max_length=6,
+        min_length=6,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-input-futuristic font-monospace text-center',
+            'placeholder': '• • • • • •',
+            'style': 'letter-spacing: 0.5rem; font-size: 1.5rem; font-weight: bold;',
+            'autocomplete': 'off'
+        })
+    )
+
+
+class ResetPasswordForm(forms.Form):
+    """Form to reset the password with validation checks."""
+    password = forms.CharField(
+        label="New Password",
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-input-futuristic',
+            'placeholder': 'Enter new secure password',
+            'id': 'new-password'
+        })
+    )
+    confirm_password = forms.CharField(
+        label="Confirm New Password",
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-input-futuristic',
+            'placeholder': 'Confirm new password',
+            'id': 'confirm-password'
+        })
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        confirm_password = cleaned_data.get('confirm_password')
+
+        if password and confirm_password and password != confirm_password:
+            raise forms.ValidationError("Passwords do not match.")
+        return cleaned_data

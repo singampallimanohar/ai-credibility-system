@@ -14,7 +14,7 @@
             <div class="text-center mb-4 pb-4 border-bottom border-secondary border-opacity-10">
                 <div class="position-relative d-inline-block mb-3">
                     <div class="bg-gradient bg-opacity-25 rounded-circle p-1" style="background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); width: 75px; height: 75px; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
-                        <span class="fs-1 font-heading text-white fw-bold">{{ user.username|slice:":1"|upper }}</span>
+                        <span class="fs-1 font-heading text-white fw-bold lh-1" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; padding-bottom: 2px;">{{ user.username|slice:":1"|upper }}</span>
                     </div>
                     <span class="position-absolute bottom-0 end-0 translate-middle-x badge rounded-circle p-2 bg-success border border-dark" style="width: 12px; height: 12px;" title="Online"></span>
                 </div>
@@ -69,9 +69,14 @@
                     <h2 class="text-gradient font-heading mb-1">SYSTEM CONTROLS</h2>
                     <p class="text-secondary fs-7 mb-0">Harness natural language integrity checks below.</p>
                 </div>
-                <div class="ai-status-pill">
-                    <span class="pulse-dot"></span>
-                    Model: NLP.Credibility.v2
+                <div class="d-flex align-items-center gap-3">
+                    <span class="ai-status-pill">
+                        <span class="pulse-dot"></span>
+                        Model: NLP.Credibility.v2
+                    </span>
+                    <a href="{% url 'dashboard_stats' %}" class="btn-futuristic btn-cyber-primary btn-sm py-2 px-3 text-decoration-none">
+                        <i class="fas fa-chart-line me-1"></i> ML Performance Panel
+                    </a>
                 </div>
             </div>
 
@@ -153,138 +158,147 @@
                 </div>
             </div>
 
-            <!-- Analyze Text Section Form -->
-            <div id="analyze-form-card" class="glass-card mb-5">
-                <div class="card-glowing-border"></div>
-                <div class="card-header-glass">
-                    <h4 class="m-0 text-gradient"><i class="fas fa-wand-magic-sparkles me-2"></i>Neural Credibility Scanner</h4>
-                    <span class="fs-8 text-secondary">Paste text content below for structural testing</span>
-                </div>
-                
-                <div class="card-body p-4">
-                    <form method="post" action="{% url 'analysis:analyze_text' %}">
-                        {% csrf_token %}
-
-                        <!-- Category Selector -->
-                        <div class="row g-4 mb-4">
-                            <div class="col-md-6">
-                                <label for="category" class="form-label text-secondary fw-semibold fs-7 uppercase tracking-wider mb-2">Content Category</label>
-                                <select class="form-select category-select-futuristic w-100" id="category" name="category">
-                                    <option value="news">News Article</option>
-                                    <option value="social">Social Media Post</option>
-                                    <option value="review">Product Review</option>
-                                    <option value="article">Blog Article</option>
-                                    <option value="other">General / Blog Draft</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="source_url" class="form-label text-secondary fw-semibold fs-7 uppercase tracking-wider mb-2">Verification Source URL (Optional)</label>
-                                <div class="position-relative">
-                                    <input type="url" class="form-input-futuristic" id="source_url" name="source_url" placeholder="https://example.com/original-article" style="padding-left: 1.5rem !important;">
-                                </div>
-                            </div>
+            <div class="row g-4">
+                <!-- Left Column: Scanner and Dataset Uploads -->
+                <div class="col-lg-12 col-12">
+                    <!-- Text Scanner Card -->
+                    <div id="analyze-form-card" class="glass-card mb-4">
+                        <div class="card-glowing-border"></div>
+                        <div class="card-header-glass">
+                            <h4 class="m-0 text-gradient"><i class="fas fa-wand-magic-sparkles me-2"></i>Neural Credibility Scanner</h4>
+                            <span class="fs-8 text-secondary">Paste text content below for structural testing</span>
                         </div>
+                        
+                        <div class="card-body p-4">
+                            <form method="post" action="{% url 'analysis:analyze_text' %}">
+                                {% csrf_token %}
 
-                        <!-- Textarea Content Input -->
-                        <div class="mb-4 position-relative">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <label for="text_content" class="form-label text-secondary fw-semibold fs-7 uppercase tracking-wider mb-0">Text content for integrity check</label>
-                                <span id="live-char-counter" class="text-muted fs-8">0 characters</span>
-                            </div>
-                            <textarea class="form-control textarea-futuristic" id="text_content" name="text_content" rows="7" placeholder="Paste or type the manuscript, claim, review, or article details you'd like our system to evaluate..." required></textarea>
-                        </div>
-
-                        <!-- Interactive Drag & Drop Area + Actions -->
-                        <div class="row g-4 align-items-center">
-                            <div class="col-lg-8 col-md-7">
-                                <!-- Hidden input for drag zone trigger -->
-                                <input type="file" id="file-upload-input" style="display: none;" accept=".txt">
-                                <div id="drag-drop-zone" class="drag-drop-zone">
-                                    <i class="fas fa-file-arrow-up drag-drop-icon"></i>
-                                    <div class="fw-semibold text-white fs-7">Drag & drop plain text file here</div>
-                                    <div class="text-secondary fs-8 mt-1">Accepts raw UTF-8 plaintext (.txt) uploads</div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-lg-4 col-md-5 d-flex flex-column gap-3">
-                                <!-- Voice microphone support -->
-                                <button type="button" id="voice-input-btn" class="btn-futuristic btn-cyber-outline py-3 w-100">
-                                    <i class="fas fa-microphone"></i> Voice Input
-                                </button>
-                                
-                                <button type="submit" class="btn-futuristic btn-cyber-primary py-3 w-100">
-                                    <i class="fas fa-cube"></i> Execute Neural Scan
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Recent Analyses Table -->
-            {% if recent_analyses %}
-            <div class="glass-card">
-                <div class="card-glowing-border"></div>
-                <div class="card-header-glass">
-                    <h4 class="m-0 text-gradient"><i class="fas fa-clock-rotate-left me-2"></i>Recent Activity Scans</h4>
-                    <a href="{% url 'analysis:my_analyses' %}" class="fs-8 text-gradient text-decoration-none hover-lift">View complete history <i class="fas fa-arrow-right ms-1"></i></a>
-                </div>
-                
-                <div class="card-body p-0">
-                    <div class="table-responsive-cyber">
-                        <table class="table-cyber">
-                            <thead>
-                                <tr>
-                                    <th>Scan Date</th>
-                                    <th>Text Excerpt</th>
-                                    <th>Category</th>
-                                    <th>Integrity Score</th>
-                                    <th>AI Classification</th>
-                                    <th class="text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for analysis in recent_analyses %}
-                                <tr>
-                                    <td class="text-secondary fs-8">{{ analysis.created_at|date:"M d, H:i" }}</td>
-                                    <td class="fw-semibold text-white text-preview-col">{{ analysis.text_preview|truncatechars:50 }}</td>
-                                    <td><span class="ai-status-pill text-cyan bg-opacity-25" style="font-size: 0.7rem; border-color: rgba(6,182,212,0.1);">{{ analysis.category }}</span></td>
-                                    <td>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="flex-grow-1 bg-secondary bg-opacity-10 rounded-pill overflow-hidden" style="width: 70px; height: 6px;">
-                                                <div class="bg-{% if analysis.is_credible %}success{% else %}danger{% endif %}" style="height: 100%; width: {{ analysis.score|floatformat:0 }}%;"></div>
-                                            </div>
-                                            <span class="badge bg-{% if analysis.is_credible %}success{% else %}danger{% endif %} bg-opacity-10 text-{% if analysis.is_credible %}success{% else %}danger{% endif %} rounded" style="font-size: 0.72rem;">
-                                                {{ analysis.score|floatformat:1 }}%
-                                            </span>
+                                <!-- Category Selector -->
+                                <div class="row g-4 mb-4">
+                                    <div class="col-md-6 col-12">
+                                        <label for="category" class="form-label text-secondary fw-semibold fs-7 uppercase tracking-wider mb-2">Content Category</label>
+                                        <select class="form-select category-select-futuristic w-100" id="category" name="category">
+                                            <option value="news">News Article</option>
+                                            <option value="social">Social Media Post</option>
+                                            <option value="review">User Review</option>
+                                            <option value="blog">Blog Content</option>
+                                            <option value="forum">Forum Discussion</option>
+                                            <option value="other">Other / General</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <label for="source_url" class="form-label text-secondary fw-semibold fs-7 uppercase tracking-wider mb-2">Verification Source URL (Optional)</label>
+                                        <div class="position-relative">
+                                            <input type="url" class="form-input-futuristic" id="source_url" name="source_url" placeholder="https://example.com/original-article" style="padding-left: 1.5rem !important;">
                                         </div>
-                                    </td>
-                                    <td>
-                                        {% if analysis.is_credible %}
-                                        <span class="verdict-badge-futuristic verdict-credible" style="padding: 0.25rem 0.75rem; font-size: 0.7rem;">
-                                            <span class="pulse-dot bg-success" style="box-shadow: 0 0 5px #10b981; width: 5px; height: 5px;"></span> Credible
-                                        </span>
-                                        {% else %}
-                                        <span class="verdict-badge-futuristic verdict-questionable" style="padding: 0.25rem 0.75rem; font-size: 0.7rem;">
-                                            <span class="pulse-dot bg-danger" style="box-shadow: 0 0 5px #ef4444; width: 5px; height: 5px;"></span> Flagged
-                                        </span>
-                                        {% endif %}
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="{% url 'analysis:analysis_detail' analysis.id %}" class="btn-futuristic btn-cyber-outline btn-sm py-2 px-3">
-                                            <i class="fas fa-circle-info"></i> View Diagnostics
-                                        </a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Textarea Content Input -->
+                                <div class="mb-4 position-relative">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <label for="text_content" class="form-label text-secondary fw-semibold fs-7 uppercase tracking-wider mb-0">Text content for integrity check</label>
+                                        <span id="live-char-counter" class="text-muted fs-8">0 characters</span>
+                                    </div>
+                                    <textarea class="form-control textarea-futuristic" id="text_content" name="text_content" rows="7" placeholder="Paste or type the manuscript, claim, review, or article details you'd like our system to evaluate..." required></textarea>
+                                </div>
+
+                                <!-- Interactive Actions -->
+                                <div class="row g-4 align-items-center">
+                                    <div class="col-lg-7 col-md-6 col-12">
+                                        <!-- Hidden input for drag zone trigger -->
+                                        <input type="file" id="file-upload-input" style="display: none;" accept=".txt">
+                                        <div id="drag-drop-zone" class="drag-drop-zone">
+                                            <i class="fas fa-file-arrow-up drag-drop-icon"></i>
+                                            <div class="fw-semibold text-white fs-7">Drag & drop plain text file here</div>
+                                            <div class="text-secondary fs-8 mt-1">Accepts raw UTF-8 plaintext (.txt) uploads</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-5 col-md-6 col-12 d-flex flex-column gap-3">
+                                        <!-- Voice microphone support -->
+                                        <button type="button" id="voice-input-btn" class="btn-futuristic btn-cyber-outline py-3 w-100">
+                                            <i class="fas fa-microphone"></i> Voice Input
+                                        </button>
+                                        
+                                        <button type="submit" class="btn-futuristic btn-cyber-primary py-3 w-100">
+                                            <i class="fas fa-cube"></i> Execute Neural Scan
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+
+
+
+                    <!-- Recent Activity Table -->
+                    {% if recent_analyses %}
+                    <div class="glass-card mb-4">
+                        <div class="card-glowing-border"></div>
+                        <div class="card-header-glass">
+                            <h4 class="m-0 text-gradient"><i class="fas fa-clock-rotate-left me-2"></i>Recent Activity Scans</h4>
+                            <a href="{% url 'analysis:my_analyses' %}" class="fs-8 text-gradient text-decoration-none hover-lift">View complete history <i class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+                        
+                        <div class="card-body p-0">
+                            <div class="table-responsive-cyber">
+                                <table class="table-cyber">
+                                    <thead>
+                                        <tr>
+                                            <th>Scan Date</th>
+                                            <th>Text Excerpt</th>
+                                            <th>Category</th>
+                                            <th>Integrity Score</th>
+                                            <th>AI Classification</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for analysis in recent_analyses %}
+                                        <tr>
+                                            <td class="text-secondary fs-8">{{ analysis.created_at|date:"M d, H:i" }}</td>
+                                            <td class="fw-semibold text-white text-preview-col">{{ analysis.text_preview|truncatechars:50 }}</td>
+                                            <td><span class="ai-status-pill text-cyan bg-opacity-25" style="font-size: 0.7rem; border-color: rgba(6,182,212,0.1);">{{ analysis.category }}</span></td>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="flex-grow-1 bg-secondary bg-opacity-10 rounded-pill overflow-hidden" style="width: 70px; height: 6px;">
+                                                        <div class="bg-{% if analysis.is_credible %}success{% else %}danger{% endif %} glow-bar-fill" data-width="{{ analysis.score|floatformat:0 }}" style="height: 100%; width: 0%;"></div>
+                                                    </div>
+                                                    <span class="badge bg-{% if analysis.is_credible %}success{% else %}danger{% endif %} bg-opacity-10 text-{% if analysis.is_credible %}success{% else %}danger{% endif %} rounded" style="font-size: 0.72rem;">
+                                                        {{ analysis.score|floatformat:1 }}%
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {% if analysis.is_credible %}
+                                                <span class="verdict-badge-futuristic verdict-credible" style="padding: 0.25rem 0.75rem; font-size: 0.7rem;">
+                                                    <span class="pulse-dot bg-success" style="box-shadow: 0 0 5px #10b981; width: 5px; height: 5px;"></span> Credible
+                                                </span>
+                                                {% else %}
+                                                <span class="verdict-badge-futuristic verdict-questionable" style="padding: 0.25rem 0.75rem; font-size: 0.7rem;">
+                                                    <span class="pulse-dot bg-danger" style="box-shadow: 0 0 5px #ef4444; width: 5px; height: 5px;"></span> Flagged
+                                                </span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'analysis:analysis_detail' analysis.id %}" class="btn-futuristic btn-cyber-outline btn-sm py-2 px-3">
+                                                    <i class="fas fa-circle-info"></i> View Diagnostics
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
+
+
             </div>
-            {% endif %}
         </main>
-        
     </div>
 </div>
 {% endblock %}
