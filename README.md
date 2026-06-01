@@ -73,53 +73,7 @@ User Input → Credibility Analysis Engine → Trust Evaluation → Database Sto
 
 ---
 
-## Project Structure
 
-```text
-ai-credibility-system/
-│
-├── analysis/
-├── users/
-├── dashboard/
-├── templates/
-├── static/
-├── credibility_system/
-├── manage.py
-├── requirements.txt
-└── build.sh
-```
-
-## Installation
-
-### Clone Repository
-
-```bash
-git clone https://github.com/singampallimanohar/ai-credibility-system.git
-```
-
-### Navigate to Project Directory
-
-```bash
-cd ai-credibility-system
-```
-
-### Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### Apply Migrations
-
-```bash
-python manage.py migrate
-```
-
-### Run Development Server
-
-```bash
-python manage.py runserver
-```
 
 ---
 
